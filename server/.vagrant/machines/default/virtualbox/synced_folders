@@ -1,0 +1,1 @@
+{"virtualbox":{"bootstrap":{"create":true,"owner":null,"group":null,"nfs":false,"transient":false,"extra":null,"id":"bootstrap","guestpath":"/mnt/bootstrap","hostpath":"/Users/max/Documents/Dropbox/Studium/6. Semester/BACHELOR ARBEIT/app/bacsurvey/server","disabled":false}}}

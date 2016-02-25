@@ -1,0 +1,1 @@
+defaultTasks ':backend:bootRun', ':frontend:grunt_serve'

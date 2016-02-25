@@ -1,0 +1,37 @@
+spring:
+  freemarker:
+    checkTemplateLocation: false
+  datasource:
+    url: jdbc:postgresql://localhost:15432/bacsurvey
+    username: bacsurvey
+    password: postgres
+  jpa:
+    hibernate:
+      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+      ddl-auto: create-drop
+    properties.hibernate.dialect: org.hibernate.dialect.PostgreSQL9Dialect
+
+multipart:
+  maxFileSize: 20Mb
+  maxRequestSize: 21Mb
+
+logging:
+  path: /var/log
+  file: bacsurvey.log
+  level.*: TRACE
+
+frontend:
+  url: http://localhost:8000/#/
+
+#email.from: bacsurvey@gmx.at
+#mail:
+#  host: mail.gmx.net
+#  port: 587
+#  protocol: smtp
+#  username: bacsurvey@gmx.at
+#  password: bacsurveyProject
+#  smtp:
+#    auth: true
+#    starttls.enable: true
+#    quitwait: false
+
