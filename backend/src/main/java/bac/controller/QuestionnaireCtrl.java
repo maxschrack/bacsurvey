@@ -110,9 +110,7 @@ public class QuestionnaireCtrl {
     // READ
     @RequestMapping(method = RequestMethod.GET)
     @ApiOperation(value = "Retrieve all Questionnaires per User", notes = "")
-    public ResponseEntity<List<QuestionnaireRest>> readAllPerUser(@PathVariable Long userId) throws ServiceException, HttpRequestMethodNotSupportedException {
-        if (questionnaireService == null)
-            throw new HttpRequestMethodNotSupportedException("GET");
+    public ResponseEntity<List<QuestionnaireRest>> readAllPerUser(@PathVariable Long userId) throws ServiceException {
 
         DtoList<QuestionnaireDto> response =
                 questionnaireService.readAllPerUser(new UserDto(userId));

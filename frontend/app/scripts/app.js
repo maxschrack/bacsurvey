@@ -24,6 +24,8 @@ angular
   ])
   .config(function ($stateProvider, $logProvider, $urlRouterProvider, DEBUG) {
 
+
+
     $logProvider.debugEnabled(DEBUG);
 
     $urlRouterProvider.otherwise('/dashboard');

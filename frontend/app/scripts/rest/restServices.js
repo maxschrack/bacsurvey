@@ -1,5 +1,6 @@
 'use strict';
 angular.module('bacsurveyApp')
+
   .factory('User', function ($resource, BACSURVEY_API) {
     return $resource(BACSURVEY_API + 'users/:userId', {}, {
       create: {method: 'POST'},
@@ -10,6 +11,7 @@ angular.module('bacsurveyApp')
     return $resource(BACSURVEY_API + 'users/:userId/questionnaires/:questionnaireId', {}, {
       create: {method: 'POST', params: {userId: '@userId'}},
       update: {method: 'PUT', params: {userId: '@userId'}},
+      getQuestionnaire: {method: 'GET', params: {userId: '@userId', questionnaireId: '@questionnaireId'}},
       readAllPerUser: {method: 'GET', params: {userId: '@userId'}, isArray: true}
     });
   });

@@ -10,29 +10,28 @@ angular.module('bacsurveyApp')
     vm.searchQuestionnaire = '';
     vm.test = 'asdf';
 
-    $http({
+    /*$http({
       method: 'GET',
       url: 'http://localhost:8080/users/1/questionnaires',
       params: {'userId': 1}
     }).then(function successCallback(response) {
-      vm.test = 'sucess';
+      vm.test = 'success';
     }, function errorCallback(response) {
       vm.test = 'fail';
-    });
+    });*/
 
 
 
     // get the list of all questionnaires per user
-    /*vm.questionnaireCollection = Questionnaire.readAllPerUser({userId: 1},
+    vm.questionnaireCollection = Questionnaire.readAllPerUser({'userId': 1},
       function () {
-
         vm.test = 'true';
       },function (error) {
 
         vm.test = error;
         ErrorHandler.show(error);
       }
-    );*/
+    );
 
 
     // Button Links
