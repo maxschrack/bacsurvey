@@ -6,9 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Date;
 
-/**
- * Created by max on 16/02/16.
- */
 public class QuestionnaireRest extends EntityModelRest {
 
     @JsonProperty("name")

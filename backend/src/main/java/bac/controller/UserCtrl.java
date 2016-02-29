@@ -20,12 +20,12 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RestController
 @RequestMapping("/users")
 @Api(value = "/users", description = "User Administration")
-public class UserController {
+public class UserCtrl {
 
     @Autowired
     private UserService userService;
 
-    public UserController(){
+    public UserCtrl(){
     }
 
     // CREATE

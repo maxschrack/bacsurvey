@@ -2,32 +2,43 @@
 
 /**
  * @ngdoc overview
- * @name frontendApp
+ * @name bacsurveyApp
  * @description
- * # frontendApp
+ * # bacsurveyApp
  *
  * Main module of the application.
  */
 angular
-  .module('frontendApp', [
+  .module('bacsurveyApp', [
     'ngAnimate',
     'ngCookies',
     'ngResource',
     'ngRoute',
     'ngSanitize',
-    'ngTouch'
+    'ngTouch',
+    'ui.router',
+    'angular.filter',
+    'toaster',
+    'config',
+    'ngDialog'
   ])
-  .config(function ($routeProvider) {
-    $routeProvider
-      .when('/', {
-        templateUrl: 'views/main.html',
-        controller: 'MainCtrl'
+  .config(function ($stateProvider, $logProvider, $urlRouterProvider, DEBUG) {
+
+    $logProvider.debugEnabled(DEBUG);
+
+    $urlRouterProvider.otherwise('/dashboard');
+
+    $stateProvider
+      .state('landingpage', {
+        url: "/landingpage",
+        templateUrl: 'views/landingPage/landing-page.html',
+        controller: 'LandingPageCtrl',
+        controllerAs: 'vm'
       })
-      .when('/about', {
-        templateUrl: 'views/about.html',
-        controller: 'AboutCtrl'
-      })
-      .otherwise({
-        redirectTo: '/'
+      .state('questionnaire', {
+        url: "/questionnaire",
+        templateUrl: 'views/questionnaire/questionnaire-administration.html',
+        controller: 'QuestionnaireCtrl',
+        controllerAs: 'vm'
       });
   });

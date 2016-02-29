@@ -1,0 +1,48 @@
+<div class="navbar-header">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+    </button>
+    <a class="navbar-brand" data-ng-click="showHome()">BACSURVEY 0.1</a>
+</div>
+<!-- /.navbar-header -->
+
+<ul class="nav navbar-top-links navbar-right">
+    <li data-ng-show="loggedIn">
+        <a data-ng-click="logout()"><i class="glyphicon glyphicon-log-out"></i>Logout</a>
+    </li>
+    <li data-ng-show="!loggedIn" class="dropdown" data-ng-class="{'open': dropdownOpen}">
+        <a class="dropdown-toggle" data-ng-click="dropdownOpen = !dropdownOpen">
+            <i class="glyphicon glyphicon-log-out"></i>Login<i class="fa fa-caret-down"></i>
+        </a>
+        <ul class="dropdown-menu dropdown-user" style="padding: 15px;min-width: 250px;">
+            <li>
+                <div class="row">
+                    <div class="col-md-12">
+                        <form class="form" name="loginForm" id="login-nav" data-ng-keydown="keyPress($event.keyCode)" novalidate>
+                            <div class="form-group">
+                                <label class="sr-only" for="username">Email address</label>
+                                <input type="text" class="form-control" id="username"
+                                       placeholder="Username"
+                                       data-ng-model="credentials.username" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="sr-only" for="password">Password</label>
+                                <input type="password" class="form-control" id="password"
+                                       placeholder="Password"
+                                       data-ng-model="credentials.password" required>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-success btn-block" data-ng-click="login()"  data-ng-disabled="loginForm.$invalid" autofocus>Login</button>
+                                <button type="submit" class="btn btn-primary btn-block" data-ng-click="register()">Register
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </li>
+</ul>

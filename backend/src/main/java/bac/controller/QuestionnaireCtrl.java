@@ -110,16 +110,19 @@ public class QuestionnaireCtrl {
     // READ
     @RequestMapping(method = RequestMethod.GET)
     @ApiOperation(value = "Retrieve all Questionnaires per User", notes = "")
-    public ResponseEntity<List<QuestionnaireRest>> read(@PathVariable Long userId) throws ServiceException, HttpRequestMethodNotSupportedException {
+    public ResponseEntity<List<QuestionnaireRest>> readAllPerUser(@PathVariable Long userId) throws ServiceException, HttpRequestMethodNotSupportedException {
         if (questionnaireService == null)
             throw new HttpRequestMethodNotSupportedException("GET");
 
         DtoList<QuestionnaireDto> response =
                 questionnaireService.readAllPerUser(new UserDto(userId));
-        List<QuestionnaireRest> questionnaires = new ArrayList<>();
+        /*List<QuestionnaireRest> questionnaires = new ArrayList<>();
         for(QuestionnaireDto dto : response){
             questionnaires.add(ModelFactory.questionnaire(dto));
-        }
+        }*/
+
+        List<QuestionnaireRest> questionnaires = response.stream().map(ModelFactory::questionnaire).collect(Collectors.toList());
+
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
