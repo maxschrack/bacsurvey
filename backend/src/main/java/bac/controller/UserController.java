@@ -1,4 +1,4 @@
-package bac.controller.impl;
+package bac.controller;
 
 import bac.dto.UserDto;
 import bac.exception.ServiceException;

@@ -1,4 +1,4 @@
-package bac.controller.impl;
+package bac.controller;
 
 import bac.dto.DtoList;
 import bac.dto.QuestionnaireDto;
@@ -28,12 +28,12 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/users/{userId}/questionnaires")
 @Api(value = "/questionnaires", description = "Questionnaire Administration")
-public class QuestionnairePerUserController {
+public class QuestionnaireCtrl {
 
     @Autowired
     private QuestionnaireService questionnaireService;
 
-    public QuestionnairePerUserController(){
+    public QuestionnaireCtrl(){
     }
 
     // CREATE

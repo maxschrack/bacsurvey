@@ -1,4 +1,4 @@
-package bac.controller.impl;
+package bac.controller;
 
 import bac.dto.DtoList;
 import bac.dto.PageDto;
@@ -25,13 +25,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/users/{userId}/questionnaires/{questionnaireId}/pages")
 @Api(value = "/pages", description = "Page Administration")
-public class PagePerQuestionnaireController {
+public class PageCtrl {
 
     @Autowired
     private PageService pageService;
 
 
-    public PagePerQuestionnaireController(){
+    public PageCtrl(){
     }
 
     // CREATE
