@@ -27,6 +27,12 @@ public class QuestionnaireRest extends EntityModelRest {
     @JsonProperty("userId")
     private Long userId;
 
+    @JsonProperty("startPageId")
+    private Long startPageId;
+
+    @JsonProperty("endPageId")
+    private Long endPageId;
+
     public String getName() {
         return name;
     }
@@ -73,5 +79,21 @@ public class QuestionnaireRest extends EntityModelRest {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public Long getStartPageId() {
+        return startPageId;
+    }
+
+    public void setStartPageId(Long startPageId) {
+        this.startPageId = startPageId;
+    }
+
+    public Long getEndPageId() {
+        return endPageId;
+    }
+
+    public void setEndPageId(Long endPageId) {
+        this.endPageId = endPageId;
     }
 }

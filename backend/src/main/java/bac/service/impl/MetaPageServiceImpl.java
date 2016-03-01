@@ -15,6 +15,7 @@ import bac.service.QuestionService;
 import bac.service.QuestionnaireService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MetaPageServiceImpl implements MetaPageService{
@@ -29,15 +30,8 @@ public class MetaPageServiceImpl implements MetaPageService{
     public MetaPageServiceImpl() {
     }
 
-    /*public MetaPageServiceImpl(MetaPageRepository metaPageRepository,
-                               MetaPageConverter metaPageConverter,
-                               QuestionnaireRepository questionnaireRepository) {
-        this.metaPageRepository = metaPageRepository;
-        this.metaPageConverter = metaPageConverter;
-        this.questionnaireRepository = questionnaireRepository;
-    }*/
-
     @Override
+    @Transactional
     public MetaPageDto createStartPage(MetaPageDto toCreate) throws ServiceException {
 
         // create
@@ -53,6 +47,7 @@ public class MetaPageServiceImpl implements MetaPageService{
     }
 
     @Override
+    @Transactional
     public MetaPageDto createEndPage(MetaPageDto toCreate) throws ServiceException {
 
         // create
@@ -68,7 +63,7 @@ public class MetaPageServiceImpl implements MetaPageService{
     }
 
 
-
+    @Transactional
     private MetaPage createMetaPage(MetaPageDto toCreate) throws ServiceException {
         if(toCreate == null)
             throw new IllegalArgumentException("Illegal Argument: Null");
@@ -106,13 +101,17 @@ public class MetaPageServiceImpl implements MetaPageService{
 
         // search
         Questionnaire finder = questionnaireRepository.findOne(toRead.getId());
-        MetaPage result = metaPageRepository.findOne(finder.getEndPage().getId());
 
-        // convert and return
-        return metaPageConverter.toDto(result);
+        if(finder.getEndPage() != null){
+            MetaPage result = metaPageRepository.findOne(finder.getEndPage().getId());
+            return metaPageConverter.toDto(result);
+        }else{
+            return null;
+        }
     }
 
     @Override
+    @Transactional
     public MetaPageDto updateMetaPage(MetaPageDto toUpdate) throws ServiceException {
 
         // validate

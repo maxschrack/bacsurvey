@@ -12,7 +12,7 @@
       <div class="form-group">
         <div class="input-group">
           <button class="btn btn-success"
-                  data-ng-click="vm.create()"><i class="fa fa-plus white"></i>Create</button>
+                  data-ng-click="vm.createQuestionnaire()"><i class="fa fa-plus white"></i>Create</button>
         </div>
       </div>
       <div class="form-group">
@@ -36,7 +36,7 @@
             </td>
             <td>
               <a data-ng-click="vm.sortType = 'created'; vm.sortReverse = !vm.sortReverse">Created
-                <span ng-show="vm.sortType == 'created' && !vm.sortReverse" class="fa fa-caret-down"></span>
+                  <span ng-show="vm.sortType == 'created' && !vm.sortReverse" class="fa fa-caret-down"></span>
                 <span ng-show="vm.sortType == 'created' && vm.sortReverse" class="fa fa-caret-up"></span>
               </a>
             </td>
@@ -53,7 +53,7 @@
           <tbody>
           <tr
             ng-repeat="questionnaire in vm.questionnaireCollection | orderBy:vm.sortType:vm.sortReverse | filter:searchQuestionnaire">
-            <td><a data-ng-click="vm.showQuestionnaire(questionnaire)">{{questionnaire.name}}</a></td>
+            <td><a data-ng-click="vm.editQuestionnaire(questionnaire)">{{questionnaire.name}}</a></td>
             <td>{{ questionnaire.created  | date: 'dd.MM.yyyy'}}</td>
             <td>{{ questionnaire.status }}</td>
             <td>

@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-lg-12">
-    <h2 class="page-header">Create Questionnaire</h2>
+    <h2 class="page-header">Edit Questionnaire</h2>
   </div>
   <!-- /.col-lg-12 -->
 </div>
@@ -29,27 +29,19 @@
                 </select>
               </div>
 
-              <div class="form-group">
-                <label for="hasStartPage">Start Page</label>
-                <select class="form-control" data-ng-model="vm.hasStartPage" name="hasStartPage" id="hasStartPage">
-                  <option value="true">yes</option>
-                  <option value="false">no</option>
-                </select>
-              </div>
-
-              <div class="panel panel-default" data-ng-if="vm.hasStartPage === 'true'">
+              <div class="panel panel-default" data-ng-if="vm.hasStartPage">
                 <div class="panel-heading">Start Page</div>
                 <div class="panel-body">
                   <div class="row">
                     <div class="col-lg-12">
                       <div class="form-group">
-                        <label for="startPage_title">Start Page / Name</label>
+                        <label for="startPage_title">Title</label>
                         <input type="text" class="form-control" name="startPage_title" id="startPage_title"
                                data-ng-model="vm.startPage.title">
                       </div>
 
                       <div class="form-group">
-                        <label for="startPage_text">Start Page / Text</label>
+                        <label for="startPage_text">Text</label>
                         <textarea class="form-control" rows="3" data-ng-model="vm.startPage.text" name="startPage_text" id="startPage_text"></textarea>
                       </div>
                     </div>
@@ -57,27 +49,19 @@
                 </div>
               </div>
 
-              <div class="form-group">
-                <label for="hasStartPage">End Page</label>
-                <select class="form-control" data-ng-model="vm.hasEndPage" name="hasEndPage" id="hasEndPage">
-                  <option value="true">yes</option>
-                  <option value="false">no</option>
-                </select>
-              </div>
-
-              <div class="panel panel-default" data-ng-if="vm.hasEndPage === 'true'">
+              <div class="panel panel-default" data-ng-if="vm.hasEndPage">
                 <div class="panel-heading">End Page</div>
                 <div class="panel-body">
                   <div class="row">
                     <div class="col-lg-12">
                       <div class="form-group">
-                        <label for="endPage_title">End Page / Name</label>
+                        <label for="endPage_title">Title</label>
                         <input type="text" class="form-control" name="endPage_title" id="endPage_title"
                                data-ng-model="vm.endPage.title">
                       </div>
 
                       <div class="form-group">
-                        <label for="endPage_text">End Page / Text</label>
+                        <label for="endPage_text">Text</label>
                         <textarea class="form-control" rows="3" data-ng-model="vm.endPage.text" name="endPage_text" id="endPage_text"></textarea>
                       </div>
                     </div>
@@ -88,8 +72,8 @@
               <div class="form-group">
                 <div class="">
                   <button type="submit" class="btn btn-success"
-                          data-ng-click="vm.create();"
-                          data-ng-disabled="!createForm.$dirty || createForm.$invalid">Create</button>
+                          data-ng-click="vm.update();"
+                          data-ng-disabled="!createForm.$dirty || createForm.$invalid">Edit</button>
                   <button type="submit" class="btn btn-default"
                           data-ng-click="vm.cancel()">Cancel</button>
                 </div>

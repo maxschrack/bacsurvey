@@ -84,9 +84,6 @@ public class QuestionnaireCtrl {
         QuestionnaireRest updatedQuestionnaire = ModelFactory.questionnaire(response);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(
-                builder.path("/questionnaires/{questionnaireId}")
-                        .buildAndExpand(response.getId().toString()).toUri());
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<>(updatedQuestionnaire, headers, HttpStatus.OK);
     }

@@ -9,9 +9,6 @@ import javax.persistence.*;
 import javax.persistence.Entity;
 import java.util.*;
 
-/**
- * Created by max on 08/02/16.
- */
 @Entity
 @Table(name="questionnaire")
 @Where(clause = "deleted='f'")

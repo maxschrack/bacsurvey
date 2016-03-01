@@ -1,3 +1,7 @@
+
+
+
+
 package bac.controller;
 
 import bac.dto.MetaPageDto;
@@ -18,22 +22,25 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
-@RequestMapping("/metaPages")
+@RequestMapping("/users/{userId}/questionnaires/{questionnaireId}")
 @Api(value = "/metaPages", description = "MetaPage Administration")
-public class MetaPageCtrl {
+public class MetaPageCtrlBackup {
 
     @Autowired
     private MetaPageService metaPageService;
 
 
-    public MetaPageCtrl() {
+    public MetaPageCtrlBackup() {
     }
 
     // CREATE
     @RequestMapping(method = RequestMethod.POST, value = "/newStartPage")
     @ApiOperation(value = "Create new StartPage", notes = "")
-    public ResponseEntity<MetaPageRest> createStartPage(@RequestBody MetaPageRest page, UriComponentsBuilder builder) throws ServiceException, InstantiationException, IllegalAccessException, HttpRequestMethodNotSupportedException {
+    public ResponseEntity<MetaPageRest> createStartPage(@PathVariable Long userId, @PathVariable Long questionnaireId, @RequestBody MetaPageRest page, UriComponentsBuilder builder) throws ServiceException, InstantiationException, IllegalAccessException, HttpRequestMethodNotSupportedException {
         if (metaPageService == null)
             throw new HttpRequestMethodNotSupportedException("POST");
 
@@ -48,7 +55,7 @@ public class MetaPageCtrl {
     // CREATE
     @RequestMapping(method = RequestMethod.POST, value = "/newEndPage")
     @ApiOperation(value = "Create new EndPage", notes = "")
-    public ResponseEntity<MetaPageRest> createEndPage(@RequestBody MetaPageRest page, UriComponentsBuilder builder) throws ServiceException, InstantiationException, IllegalAccessException, HttpRequestMethodNotSupportedException {
+    public ResponseEntity<MetaPageRest> createEndPage(@PathVariable Long userId, @PathVariable Long questionnaireId, @RequestBody MetaPageRest page, UriComponentsBuilder builder) throws ServiceException, InstantiationException, IllegalAccessException, HttpRequestMethodNotSupportedException {
         if (metaPageService == null)
             throw new HttpRequestMethodNotSupportedException("POST");
 
@@ -56,14 +63,17 @@ public class MetaPageCtrl {
         MetaPageRest newPage = ModelFactory.metaPage(response);
 
         HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(
+                builder.path("/users/{userId}/questionnaires/{questionnaireId}pages/{pageId}")
+                        .buildAndExpand(userId, questionnaireId, response.getId().toString()).toUri());
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<>(newPage, headers, HttpStatus.CREATED);
     }
 
     // READ
-    @RequestMapping(method = RequestMethod.GET, value = "/getStartPage/{questionnaireId}")
+    @RequestMapping(method = RequestMethod.GET, value = "/getStartPage")
     @ApiOperation(value = "Retrieve the Questionnaire's StartPage", notes = "")
-    public ResponseEntity<MetaPageRest> readStartPageByQuestionnaire(@PathVariable Long questionnaireId) throws ServiceException, HttpRequestMethodNotSupportedException {
+    public ResponseEntity<MetaPageRest> readStartPageByQuestionnaire(@PathVariable Long userId, @PathVariable Long questionnaireId) throws ServiceException, HttpRequestMethodNotSupportedException {
         if (metaPageService == null)
             throw new HttpRequestMethodNotSupportedException("GET");
 
@@ -80,9 +90,9 @@ public class MetaPageCtrl {
     }
 
     // READ
-    @RequestMapping(method = RequestMethod.GET, value = "/getEndPage/{questionnaireId}")
+    @RequestMapping(method = RequestMethod.GET, value = "/getEndPage")
     @ApiOperation(value = "Retrieve the Questionnaire's EndPage", notes = "")
-    public ResponseEntity<MetaPageRest> readEndPageByQuestionnaire(@PathVariable Long questionnaireId) throws ServiceException, HttpRequestMethodNotSupportedException {
+    public ResponseEntity<MetaPageRest> readEndPageByQuestionnaire(@PathVariable Long userId, @PathVariable Long questionnaireId) throws ServiceException, HttpRequestMethodNotSupportedException {
         if (metaPageService == null)
             throw new HttpRequestMethodNotSupportedException("GET");
 
@@ -99,14 +109,14 @@ public class MetaPageCtrl {
     }
 
     // UPDATE
-    @RequestMapping(method = RequestMethod.PUT, value = "/updatePage")
+    @RequestMapping(method = RequestMethod.PUT, value = "/{pageId}")
     @ApiOperation(value = "Update a Page", notes = "")
-    public ResponseEntity<MetaPageRest> update(@RequestBody MetaPageRest page, UriComponentsBuilder builder) throws ServiceException, InstantiationException, IllegalAccessException, HttpRequestMethodNotSupportedException {
+    public ResponseEntity<MetaPageRest> update(@PathVariable Long userId, @PathVariable Long questionnaireId, @PathVariable Long pageId, @RequestBody MetaPageRest page, UriComponentsBuilder builder) throws ServiceException, InstantiationException, IllegalAccessException, HttpRequestMethodNotSupportedException {
         if (metaPageService == null)
             throw new HttpRequestMethodNotSupportedException("PUT");
 
         MetaPageDto toUpdate = DtoFactory.toDto(page);
-        toUpdate.setId(page.getSelfId());
+        toUpdate.setId(pageId);
         MetaPageDto response = metaPageService.updateMetaPage(toUpdate);
         MetaPageRest updatedPage = ModelFactory.metaPage(response);
 
@@ -115,9 +125,9 @@ public class MetaPageCtrl {
         return new ResponseEntity<>(updatedPage, headers, HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "/deletePage/{pageId}")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{pageId}")
     @ApiOperation(value = "Delete a Page", notes = "")
-    public ResponseEntity<MetaPageRest> delete(@PathVariable Long pageId) throws ServiceException, HttpRequestMethodNotSupportedException {
+    public ResponseEntity<MetaPageRest> delete(@PathVariable Long userId, @PathVariable Long questionnaireId, @PathVariable Long pageId) throws ServiceException, HttpRequestMethodNotSupportedException {
         if (metaPageService == null)
             throw new HttpRequestMethodNotSupportedException("DELETE");
 

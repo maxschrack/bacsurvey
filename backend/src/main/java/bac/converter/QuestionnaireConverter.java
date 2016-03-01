@@ -86,9 +86,9 @@ public class QuestionnaireConverter extends Converter<QuestionnaireDto, Question
         }
 
         // set endPage
-        if(dto.getStartPageId() != null) {
+        if(dto.getEndPageId() != null) {
             MetaPage endPage = metaPageRepository.findOne(dto.getEndPageId());
-            if (endPage == null) {
+            if (endPage != null) {
                 entity.setEndPage(endPage);
             }
         }

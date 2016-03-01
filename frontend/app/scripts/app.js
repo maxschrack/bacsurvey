@@ -20,7 +20,8 @@ angular
     'angular.filter',
     'toaster',
     'config',
-    'ngDialog'
+    'ngDialog',
+    'ui.bootstrap'
   ])
   .config(function ($stateProvider, $logProvider, $urlRouterProvider, DEBUG) {
 
@@ -40,7 +41,19 @@ angular
       .state('questionnaire', {
         url: '/questionnaire',
         templateUrl: 'views/questionnaire/questionnaire-administration.html',
-        controller: 'QuestionnaireCtrl',
+        controller: 'QuestionnaireAdministrationCtrl',
+        controllerAs: 'vm'
+      })
+      .state('createQuestionnaire', {
+        url: '/createQuestionnaire',
+        templateUrl: 'views/questionnaire/create-questionnaire.html',
+        controller: 'CreateQuestionnaireCtrl',
+        controllerAs: 'vm'
+      })
+      .state('editQuestionnaire', {
+        url: '/users/:userId/editQuestionnaire/:questionnaireId',
+        templateUrl: 'views/questionnaire/edit-questionnaire.html',
+        controller: 'EditQuestionnaireCtrl',
         controllerAs: 'vm'
       });
   });

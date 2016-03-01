@@ -1,6 +1,6 @@
 'use strict';
 angular.module('bacsurveyApp')
-  .controller('QuestionnaireCtrl', function ($http, $filter, $q, $rootScope, $log, ErrorHandler, Questionnaire, NotificationHandler, $state) {
+  .controller('QuestionnaireAdministrationCtrl', function ($filter, $q, $rootScope, $log, ErrorHandler, Questionnaire, NotificationHandler, $state) {
 
     var vm = this;
 
@@ -8,27 +8,13 @@ angular.module('bacsurveyApp')
     vm.sortType = 'name';
     vm.sortReverse = false;
     vm.searchQuestionnaire = '';
-    vm.test = 'asdf';
 
-    /*$http({
-      method: 'GET',
-      url: 'http://localhost:8080/users/1/questionnaires',
-      params: {'userId': 1}
-    }).then(function successCallback(response) {
-      vm.test = 'success';
-    }, function errorCallback(response) {
-      vm.test = 'fail';
-    });*/
-
-
+    vm.userId = 1;
 
     // get the list of all questionnaires per user
-    vm.questionnaireCollection = Questionnaire.readAllPerUser({'userId': 1},
+    vm.questionnaireCollection = Questionnaire.readAllPerUser({'userId': vm.userId},
       function () {
-        vm.test = 'true';
       },function (error) {
-
-        vm.test = error;
         ErrorHandler.show(error);
       }
     );
@@ -44,6 +30,6 @@ angular.module('bacsurveyApp')
     };
 
     vm.editQuestionnaire = function (questionnaire) {
-      $state.go('editQuestionnaire', {'questionnaireId': questionnaire.id});
+      $state.go('editQuestionnaire', {'userId': vm.userId, 'questionnaireId': questionnaire.id});
     }
   });
