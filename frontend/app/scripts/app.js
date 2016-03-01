@@ -32,13 +32,13 @@ angular
 
     $stateProvider
       .state('landingpage', {
-        url: "/landingpage",
+        url: '/landingpage',
         templateUrl: 'views/landingPage/landing-page.html',
         controller: 'LandingPageCtrl',
         controllerAs: 'vm'
       })
       .state('questionnaire', {
-        url: "/questionnaire",
+        url: '/questionnaire',
         templateUrl: 'views/questionnaire/questionnaire-administration.html',
         controller: 'QuestionnaireCtrl',
         controllerAs: 'vm'

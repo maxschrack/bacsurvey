@@ -24,8 +24,6 @@
         </div>
       </div>
 
-      Test: {{vm.questionnaireCollection}}
-      Test 2: {{vm.test}}
       <div class="form-group">
         <table class="table table-bordered table-striped">
           <thead>
@@ -56,7 +54,7 @@
           <tr
             ng-repeat="questionnaire in vm.questionnaireCollection | orderBy:vm.sortType:vm.sortReverse | filter:searchQuestionnaire">
             <td><a data-ng-click="vm.showQuestionnaire(questionnaire)">{{questionnaire.name}}</a></td>
-            <td>{{ questionnaire.created }}</td>
+            <td>{{ questionnaire.created  | date: 'dd.MM.yyyy'}}</td>
             <td>{{ questionnaire.status }}</td>
             <td>
               <button data-ng-click="vm.editQuestionnaire(questionnaire)" class="btn btn-default btn-sm"

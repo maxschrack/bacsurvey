@@ -22,5 +22,5 @@ angular.module('bacsurveyApp')
                     $location.path('/universityAdmin');
                 };
             }
-        }
+        };
     });

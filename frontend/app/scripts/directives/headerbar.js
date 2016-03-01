@@ -15,7 +15,7 @@ angular.module('bacsurveyApp')
 
                 function activate() {
                     if ($rootScope.authToken) {
-                        $location.path("/dashboard");
+                        $location.path('/dashboard');
                     }
                 }
 
