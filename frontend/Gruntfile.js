@@ -389,6 +389,9 @@ module.exports = function (grunt) {
     }
   });
 
+  grunt.loadNpmTasks('grunt-npm-install');
+  grunt.loadNpmTasks('grunt-ng-constant');
+
 
   grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
     if (target === 'dist') {
@@ -397,6 +400,7 @@ module.exports = function (grunt) {
 
     grunt.task.run([
       'clean:server',
+      'npm-install',
       'wiredep',
       'concurrent:server',
       'autoprefixer:server',
