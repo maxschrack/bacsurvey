@@ -1,6 +1,7 @@
 package bac.util;
 
 import bac.dto.*;
+import bac.model.enums.EQuestionType;
 import bac.rest.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,6 +51,7 @@ public class ModelFactory {
     public static OpenQuestionRest openQuestion(OpenQuestionDto dto) {
         OpenQuestionRest openQuestionRest = new OpenQuestionRest();
         setValuesFromDto(dto, openQuestionRest);
+        openQuestionRest.setType(EQuestionType.oq);
         return openQuestionRest;
     }
 
@@ -62,6 +64,7 @@ public class ModelFactory {
     public static MultipleChoiceRest multipleChoice(MultipleChoiceDto dto) {
         MultipleChoiceRest multipleChoiceRest = new MultipleChoiceRest();
         setValuesFromDto(dto, multipleChoiceRest);
+        multipleChoiceRest.setType(EQuestionType.mc);
         return multipleChoiceRest;
     }
 

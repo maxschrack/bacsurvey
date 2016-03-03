@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users/{userId}/questionnaires/{questionnaireId}/pages")
+@RequestMapping("/pages")
 @Api(value = "/pages", description = "Page Administration")
 public class PageCtrl {
 
@@ -37,7 +37,7 @@ public class PageCtrl {
     // CREATE
     @RequestMapping(method = RequestMethod.POST)
     @ApiOperation(value = "Create a new Page", notes = "")
-    public ResponseEntity<PageRest> create(@PathVariable Long userId, @PathVariable Long questionnaireId, @RequestBody PageRest page, UriComponentsBuilder builder) throws ServiceException, InstantiationException, IllegalAccessException, HttpRequestMethodNotSupportedException {
+    public ResponseEntity<PageRest> create(@RequestBody PageRest page, UriComponentsBuilder builder) throws ServiceException, InstantiationException, IllegalAccessException, HttpRequestMethodNotSupportedException {
         if (pageService == null)
             throw new HttpRequestMethodNotSupportedException("POST");
 
@@ -45,17 +45,14 @@ public class PageCtrl {
         PageRest newPage = ModelFactory.page(response);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(
-                builder.path("/users/{userId}/questionnaires/{questionnaireId}/pages/{pageId}")
-                        .buildAndExpand(userId, questionnaireId, response.getId().toString()).toUri());
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<>(newPage, headers, HttpStatus.CREATED);
     }
 
     // READ
     @RequestMapping(method = RequestMethod.GET, value = "/{pageId}")
-    @ApiOperation(value = "Retrieve an Page", notes = "")
-    public ResponseEntity<PageRest> read(@PathVariable Long userId, @PathVariable Long questionnaireId, @PathVariable Long pageId) throws ServiceException, HttpRequestMethodNotSupportedException {
+    @ApiOperation(value = "Retrieve a Page", notes = "")
+    public ResponseEntity<PageRest> read(@PathVariable Long pageId) throws ServiceException, HttpRequestMethodNotSupportedException {
         if (pageService == null)
             throw new HttpRequestMethodNotSupportedException("GET");
 
@@ -70,28 +67,25 @@ public class PageCtrl {
     }
 
     // UPDATE
-    @RequestMapping(method = RequestMethod.PUT, value = "/{pageId}")
+    @RequestMapping(method = RequestMethod.PUT)
     @ApiOperation(value = "Update a Page", notes = "")
-    public ResponseEntity<PageRest> update(@PathVariable Long userId, @PathVariable Long questionnaireId, @PathVariable Long pageId, @RequestBody PageRest page, UriComponentsBuilder builder) throws ServiceException, InstantiationException, IllegalAccessException, HttpRequestMethodNotSupportedException {
+    public ResponseEntity<PageRest> update(@RequestBody PageRest page, UriComponentsBuilder builder) throws ServiceException, InstantiationException, IllegalAccessException, HttpRequestMethodNotSupportedException {
         if (pageService == null)
             throw new HttpRequestMethodNotSupportedException("PUT");
 
         PageDto toUpdate = DtoFactory.toDto(page);
-        toUpdate.setId(pageId);
+        toUpdate.setId(page.getSelfId());
         PageDto response = pageService.update(toUpdate);
         PageRest updatedPage = ModelFactory.page(response);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(
-                builder.path("/users/{userId}/questionnaires/{questionnaireId}/pages/{pageId}")
-                        .buildAndExpand(userId, questionnaireId, response.getId().toString()).toUri());
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<>(updatedPage, headers, HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/{pageId}")
     @ApiOperation(value = "Delete a Page", notes = "")
-    public ResponseEntity<PageRest> delete(@PathVariable Long userId, @PathVariable Long questionnaireId, @PathVariable Long pageId) throws ServiceException, HttpRequestMethodNotSupportedException {
+    public ResponseEntity<PageRest> delete(@PathVariable Long pageId) throws ServiceException, HttpRequestMethodNotSupportedException {
         if (pageService == null)
             throw new HttpRequestMethodNotSupportedException("DELETE");
 
@@ -104,9 +98,9 @@ public class PageCtrl {
     }
 
     // READ ALL PER Questionnaire
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET, value = "/getAllPerQuestionnaire/{questionnaireId}")
     @ApiOperation(value = "Retrieve all Pages per Questionnaire", notes = "")
-    public ResponseEntity<List<PageRest>> read(@PathVariable Long userId, @PathVariable Long questionnaireId) throws ServiceException, HttpRequestMethodNotSupportedException {
+    public ResponseEntity<List<PageRest>> readAllPerQuestionnaire(@PathVariable Long questionnaireId) throws ServiceException, HttpRequestMethodNotSupportedException {
         if (pageService == null)
             throw new HttpRequestMethodNotSupportedException("GET");
 

@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/users/{userId}/questionnaires/{questionnaireId}/pages/{pageId}/questions")
+@RequestMapping("questions")
 @Api(value = "/questions", description = "Question Administration")
 public class QuestionPerPageCtrl {
 
@@ -39,7 +39,7 @@ public class QuestionPerPageCtrl {
     // CREATE OPEN QUESTION
     @RequestMapping(method = RequestMethod.POST, value = "/newOpenQuestion")
     @ApiOperation(value = "Create a new Open Question", notes = "")
-    public ResponseEntity<QuestionRest> create(@PathVariable Long userId, @PathVariable Long questionnaireId, @PathVariable Long pageId, @RequestBody OpenQuestionRest openQuestion, UriComponentsBuilder builder) throws ServiceException, InstantiationException, IllegalAccessException, HttpRequestMethodNotSupportedException {
+    public ResponseEntity<QuestionRest> create(@RequestBody OpenQuestionRest openQuestion, UriComponentsBuilder builder) throws ServiceException, InstantiationException, IllegalAccessException, HttpRequestMethodNotSupportedException {
         if (questionService == null)
             throw new HttpRequestMethodNotSupportedException("POST");
 
@@ -47,9 +47,6 @@ public class QuestionPerPageCtrl {
         QuestionRest newQuestion = ModelFactory.openQuestion(response);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(
-                builder.path("/users/{userId}/questionnaires/{questionnaireId}/pages/{pageId}/question/{questionId}")
-                        .buildAndExpand(userId, questionnaireId, pageId, response.getId().toString()).toUri());
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<>(newQuestion, headers, HttpStatus.CREATED);
     }
@@ -57,7 +54,7 @@ public class QuestionPerPageCtrl {
     // CREATE MULTIPLE CHOICE QUESTION
     @RequestMapping(method = RequestMethod.POST, value = "/newMultipleChoiceQuestion")
     @ApiOperation(value = "Create a new Multiple Choice Question", notes = "")
-    public ResponseEntity<QuestionRest> create(@PathVariable Long userId, @PathVariable Long questionnaireId, @PathVariable Long pageId, @RequestBody MultipleChoiceRest question, UriComponentsBuilder builder) throws ServiceException, InstantiationException, IllegalAccessException, HttpRequestMethodNotSupportedException {
+    public ResponseEntity<QuestionRest> create(@RequestBody MultipleChoiceRest question, UriComponentsBuilder builder) throws ServiceException, InstantiationException, IllegalAccessException, HttpRequestMethodNotSupportedException {
         if (questionService == null)
             throw new HttpRequestMethodNotSupportedException("POST");
 
@@ -69,17 +66,14 @@ public class QuestionPerPageCtrl {
         QuestionRest newQuestion = ModelFactory.multipleChoice((MultipleChoiceDto) response);
 
         HttpHeaders headers = new HttpHeaders();
-       /* headers.setLocation(
-                builder.path("/users/{userId}/questionnaires/{questionnaireId}/pages/{pageId}/question/{questionId}")
-                        .buildAndExpand(userId, questionnaireId, pageId, response.getId().toString()).toUri());*/
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<>(newQuestion, headers, HttpStatus.CREATED);
     }
 
     // READ
-    @RequestMapping(method = RequestMethod.GET, value = "/{questionId}")
+    /*@RequestMapping(method = RequestMethod.GET, value = "/{questionId}")
     @ApiOperation(value = "Retrieve an Question", notes = "")
-    public ResponseEntity<QuestionRest> read(@PathVariable Long userId, @PathVariable Long questionnaireId, @PathVariable Long pageId, @PathVariable Long questionId) throws ServiceException, HttpRequestMethodNotSupportedException {
+    public ResponseEntity<QuestionRest> read(@PathVariable Long questionId) throws ServiceException, HttpRequestMethodNotSupportedException {
         if (questionService == null)
             throw new HttpRequestMethodNotSupportedException("GET");
 
@@ -99,7 +93,7 @@ public class QuestionPerPageCtrl {
         return new ResponseEntity<>(question, headers, HttpStatus.OK);
     }
 
-/*    // UPDATE
+    // UPDATE
     @RequestMapping(method = RequestMethod.PUT, value = "/{questionId}")
     @ApiOperation(value = "Update a Question", notes = "")
     public ResponseEntity<QuestionRest> update(@PathVariable Long userId, @PathVariable Long questionnaireId, @PathVariable Long pageId, @PathVariable Long questionId, @RequestBody QuestionRest question, UriComponentsBuilder builder) throws ServiceException, InstantiationException, IllegalAccessException, HttpRequestMethodNotSupportedException {
@@ -135,9 +129,9 @@ public class QuestionPerPageCtrl {
     */
 
     // READ ALL PER Questionnaire
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET, value="/readAllPerPage/{pageId}")
     @ApiOperation(value = "Retrieve all Questions per Page", notes = "")
-    public ResponseEntity<List<QuestionRest>> read(@PathVariable Long userId, @PathVariable Long questionnaireId, @PathVariable Long pageId) throws ServiceException, HttpRequestMethodNotSupportedException {
+    public ResponseEntity<List<QuestionRest>> readAllPerPage(@PathVariable Long pageId) throws ServiceException, HttpRequestMethodNotSupportedException {
         if (questionService == null)
             throw new HttpRequestMethodNotSupportedException("GET");
 

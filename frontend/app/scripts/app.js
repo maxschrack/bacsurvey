@@ -50,6 +50,12 @@ angular
         controller: 'CreateQuestionnaireCtrl',
         controllerAs: 'vm'
       })
+      .state('editQuestionnaireData', {
+        url: '/users/:userId/editQuestionnaireData/:questionnaireId',
+        templateUrl: 'views/questionnaire/edit-questionnaire-data.html',
+        controller: 'EditQuestionnaireDataCtrl',
+        controllerAs: 'vm'
+      })
       .state('editQuestionnaire', {
         url: '/users/:userId/editQuestionnaire/:questionnaireId',
         templateUrl: 'views/questionnaire/edit-questionnaire.html',

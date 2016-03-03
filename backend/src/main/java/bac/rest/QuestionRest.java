@@ -1,6 +1,7 @@
 package bac.rest;
 
 
+import bac.model.enums.EQuestionType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public abstract class QuestionRest extends EntityModelRest{
@@ -13,6 +14,9 @@ public abstract class QuestionRest extends EntityModelRest{
 
     @JsonProperty("position")
     private int position;
+
+    @JsonProperty("type")
+    private EQuestionType type;
 
     @JsonProperty("deleted")
     private boolean deleted;
@@ -42,6 +46,14 @@ public abstract class QuestionRest extends EntityModelRest{
 
     public void setPosition(int position) {
         this.position = position;
+    }
+
+    public EQuestionType getType() {
+        return type;
+    }
+
+    public void setType(EQuestionType type) {
+        this.type = type;
     }
 
     public boolean getDeleted() {

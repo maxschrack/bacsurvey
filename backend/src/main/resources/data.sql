@@ -15,11 +15,18 @@ VALUES(nextval('seq_questionnaire_id'), 2, 'Test Questionnaire 3', '2016-2-15 14
 
 -- PAGES FOR QUESTIONNAIRE 1
 INSERT INTO page(id, questionnaire_id, title, text, number, deleted)
-VALUES(nextval('seq_page_id'), 1, 'Page 1 of Questionnaire 1', 'Test Text for Page 1 of Questionnaire 1', 0, false);
+VALUES(nextval('seq_page_id'), 1, 'Page 1 of Questionnaire 1', 'Test Text for Page 1 of Questionnaire 1', 0,false);
 INSERT INTO page(id, questionnaire_id, title, text, number, deleted)
 VALUES(nextval('seq_page_id'), 1, 'Page 2 of Questionnaire 1', 'Test Text for Page 2 of Questionnaire 1', 1, false);
 INSERT INTO page(id, questionnaire_id, title, text, number, deleted)
 VALUES(nextval('seq_page_id'), 1, 'Page 3 of Questionnaire 1', 'Test Text for Page 3 of Questionnaire 1', 2, false);
+
+INSERT INTO meta_page(id, title, text, questionnaire_id, deleted)
+VALUES(nextval('seq_metapage_id'),'Welcome', 'This is my first questionnaire!', 1, false);
+INSERT INTO meta_page(id, title, text, questionnaire_id, deleted)
+VALUES(nextval('seq_metapage_id'),'Bye bye', 'This was my first questionnaire!', 1, false);
+
+UPDATE questionnaire SET start_page = 1, end_page = 2 WHERE id = 1;
 
 -- QUESTIONS FOR PAGE 1
   -- OPEN QUESTION 1

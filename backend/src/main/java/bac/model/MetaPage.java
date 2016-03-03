@@ -6,9 +6,6 @@ import org.hibernate.annotations.Where;
 import javax.persistence.*;
 import javax.persistence.Entity;
 
-/**
- * Created by max on 09/02/16.
- */
 @Entity
 @Table(name="meta_page")
 @Where(clause = "deleted='f'")

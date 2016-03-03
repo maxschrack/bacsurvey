@@ -23,12 +23,15 @@ angular.module('bacsurveyApp')
     // Button Links
     vm.createQuestionnaire = function () {
       $state.go('createQuestionnaire');
-    }
+    };
 
     vm.showQuestionnaire = function (questionnaire) {
       $state.go('questionnaire', {'questionnaireId': questionnaire.id});
     };
 
+    vm.editQuestionnaireData = function (questionnaire) {
+      $state.go('editQuestionnaireData', {'userId': vm.userId, 'questionnaireId': questionnaire.id});
+    };
     vm.editQuestionnaire = function (questionnaire) {
       $state.go('editQuestionnaire', {'userId': vm.userId, 'questionnaireId': questionnaire.id});
     }

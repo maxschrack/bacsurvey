@@ -1,94 +1,487 @@
 <div class="row">
   <div class="col-lg-12">
-    <h2 class="page-header">Edit Questionnaire</h2>
+    <h2 class="page-header">Edit <i>{{vm.questionnaire.name}}</i></h2>
   </div>
   <!-- /.col-lg-12 -->
 </div>
 <!-- /.row -->
 <div class="row">
   <div class="col-lg-12">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        Questionnaire
-      </div>
+
+    <!-- ################## QUESTIONNAIRE DATA ################## -->
+    <uib-accordion>
+      <uib-accordion-group is-open="status.open" >
+        <uib-accordion-heading>Questionnaire Data
+          <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+        </uib-accordion-heading>
+        <div class="col-lg-6">
+          <form role="form" name="editQuestionnaireData" novalidate>
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" class="form-control" name="name" id="name"
+                     data-ng-model="vm.questionnaire.name" required>
+            </div>
+
+            <div class="form-group">
+              <label for="progressbar">Show Progressbar</label>
+              <select class="form-control" data-ng-model="vm.questionnaire.progressbar" name="progressbar" id="progressbar">
+                <option value="true">yes</option>
+                <option value="false">no</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <div class="">
+                <button type="submit" class="btn btn-success"
+                        data-ng-click="vm.updateQuestionnaireData();"
+                        data-ng-disabled="!editQuestionnaireData.$dirty || editQuestionnaireData.$invalid">Edit</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </uib-accordion-group>
+    </uib-accordion>
+
+
+    <!-- ################## START PAGE ################## -->
+    <uib-accordion>
+      <uib-accordion-group is-open="status.open" data-ng-if="vm.hasStartPage" panel-class="panel-warning">
+        <uib-accordion-heading>Start Page
+          <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+        </uib-accordion-heading>
+        <div class="col-lg-6">
+          <form role="form" name="editStartPage" novalidate>
+            <div class="form-group">
+              <label for="startPage_title">Title</label>
+              <input type="text" class="form-control" name="startPage_title" id="startPage_title"
+                     data-ng-model="vm.startPage.title">
+            </div>
+
+            <div class="form-group">
+              <label for="startPage_text">Text</label>
+              <textarea class="form-control" rows="3" data-ng-model="vm.startPage.text" name="startPage_text" id="startPage_text"></textarea>
+            </div>
+
+            <div class="form-group">
+              <div class="">
+                <button type="submit" class="btn btn-success"
+                        data-ng-click="vm.updateMetaPage(vm.startPage);"
+                        data-ng-disabled="!editStartPage.$dirty || editStartPage.$invalid">Edit</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </uib-accordion-group>
+    </uib-accordion>
+
+    <!-- ################## PAGES ################## -->
+    <uib-accordion ng-repeat="page in vm.pageCollection">
+      <uib-accordion-group is-open="status.open">
+        <uib-accordion-heading>Page {{page.position}}: <i>{{page.title}}</i>
+          <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+        </uib-accordion-heading>
+
+        <!-- ################## PAGE META DATA################## -->
+        <uib-accordion>
+          <uib-accordion-group is-open="status.openPageData">
+            <uib-accordion-heading>Meta Data
+              <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.openPageData, 'glyphicon-chevron-right': !status.openPageData}"></i>
+            </uib-accordion-heading>
+            <div class="col-lg-6">
+              <form role="form" name="editPageData" novalidate>
+                <div class="form-group">
+                  <label>Title</label>
+                  <input type="text" class="form-control" data-ng-model="page.title">
+                </div>
+
+                <div class="form-group">
+                  <label for="startPage_text">Text</label>
+                  <textarea class="form-control" rows="3" data-ng-model="page.text"></textarea>
+                </div>
+
+                <div class="form-group">
+                  <div class="">
+                    <button type="submit" class="btn btn-success"
+                            data-ng-click="vm.updatePageData(page);"
+                            data-ng-disabled="!editPageData.$dirty || editPageData.$invalid">Edit</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </uib-accordion-group>
+        </uib-accordion>
+
+        <!-- ################## QUESTIONS PER PAGE ################## -->
+        <div class="panel panel-info" ng-repeat="question in page.questions">
+          <div class="panel-heading">
+
+            <h4 class="panel-title">{{question.text}} <span data-ng-show="question.mandatory">*</span></h4> </div>
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-lg-6">
+
+
+                <!-- form for oq questions -->
+                <form role="form" name="editQuestionData" novalidate data-ng-show="question.type === 'oq'">
+                  <div class="form-group">
+                    <label for="name">Text</label>
+                    <input type="text" class="form-control" data-ng-model="question.text" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Mandatory</label>
+                    <select
+                      data-ng-model="question.mandatory"
+                      data-ng-options="option.val as option.name for option in vm.optionsYesNo"
+                      class="form-control"></select>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Long Text</label>
+                    <select
+                      data-ng-model="question.isLong"
+                      data-ng-options="option.val as option.name for option in vm.optionsYesNo"
+                      class="form-control"></select>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Validation</label>
+                    <select
+                      data-ng-model="question.validationType"
+                      data-ng-options="option.val as option.name for option in vm.optionsValidationType"
+                      class="form-control"></select>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="">
+                      <button type="submit" class="btn btn-success"
+                              data-ng-click="vm.updateQuestionData();"
+                              data-ng-disabled="!editQuestionData.$dirty || editQuestionData.$invalid">Edit</button>
+                    </div>
+                  </div>
+                </form>
+
+                <!-- form for mc questions -->
+                <form role="form" name="editQuestionData" novalidate data-ng-show="question.type === 'mc'">
+                  <div class="form-group">
+                    <label for="name">Text</label>
+                    <input type="text" class="form-control" data-ng-model="question.text" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Mandatory</label>
+                    <select
+                      data-ng-model="question.mandatory"
+                      data-ng-options="option.val as option.name for option in vm.optionsYesNo"
+                      class="form-control"></select>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Single Choice</label>
+                    <select
+                      data-ng-model="question.isSingleChoice"
+                      data-ng-options="option.val as option.name for option in vm.optionsYesNo"
+                      class="form-control"></select>
+                  </div>
+
+                  <div class="form-group">
+                    <!-- Add Answers -->
+                    <div class="form-group">
+                      {{question.answers}}
+                      <div ng-repeat="answer in question.answers">
+                        <input type="checkbox" data-ng-show="!question.isSingleChoice"><input type="radio" data-ng-show="question.isSingleChoice"> <input type="text" data-ng-model="answer" value="{{answer}}">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="">
+                      <button type="submit" class="btn btn-success"
+                              data-ng-click="vm.updateQuestionData();"
+                              data-ng-disabled="!editQuestionData.$dirty || editQuestionData.$invalid">Edit</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ################## ADD NEW QUESTION BUTTON ################## -->
+        <br>
+        <button type="submit" class="btn btn-success" data-ng-click="vm.showAddNewQuestionDialog();" data-ng-show="!vm.showAddQuestionDiv" >Add Question</button>
+
+        <!-- ################## ADD NEW QUESTION DIV ################## -->
+        <div class="panel panel-green" data-ng-show="vm.showAddQuestionDiv">
+          <div class="panel-heading"><h4 class="panel-title">Add Question</h4> </div>
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label>Question Type</label>
+                  <select
+                    data-ng-model="vm.newQuestionType"
+                    class="form-control">
+                    <option value ="OQ">Open Question</option>
+                    <option value ="MC">Multiple Choice</option>
+                  </select>
+                  </select>
+                </div>
+
+                <!-- form for oq questions -->
+                <form role="form" name="addQuestion" novalidate data-ng-show="vm.newQuestionType === 'OQ'">
+                  <div class="form-group">
+                    <label>Text</label>
+                    <input type="text" class="form-control" data-ng-model="vm.newQuestion.text" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Mandatory</label>
+                    <select
+                      data-ng-model="vm.newQuestion.mandatory"
+                      data-ng-options="option.val as option.name for option in vm.optionsYesNo"
+                      class="form-control"></select>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Long Text</label>
+                    <select
+                      data-ng-model="vm.newQuestion.isLong"
+                      data-ng-options="option.val as option.name for option in vm.optionsYesNo"
+                      class="form-control"></select>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Validation</label>
+                    <select
+                      data-ng-model="vm.newQuestion.validationType"
+                      data-ng-options="option.val as option.name for option in vm.optionsValidationType"
+                      class="form-control"></select>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <div class="">
+                      <button type="submit" class="btn btn-success"
+                              data-ng-click="vm.addQuestion(page);"
+                              data-ng-disabled="!addQuestion.$dirty || addQuestion.$invalid">Add</button>
+                      <button type="submit" class="btn btn-default"
+                              data-ng-click="vm.showAddNewQuestionDialog()">Cancel</button>
+                    </div>
+                  </div>
+                </form>
+
+                <!-- form for mc questions -->
+                <form role="form" name="addQuestion" novalidate data-ng-show="vm.newQuestionType === 'MC'">
+                  <div class="form-group">
+                    <label>Text</label>
+                    <input type="text" class="form-control" data-ng-model="vm.newQuestion.text" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Mandatory</label>
+                    <select
+                      data-ng-model="vm.newQuestion.mandatory"
+                      data-ng-options="option.val as option.name for option in vm.optionsYesNo"
+                      class="form-control"></select>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Single Choice</label>
+                    <select
+                      data-ng-model="vm.newQuestion.isSingleChoice"
+                      data-ng-options="option.val as option.name for option in vm.optionsValidationType"
+                      class="form-control"></select>
+                  </div>
+
+
+
+                  <div class="form-group">
+                    <div class="">
+                      <button type="submit" class="btn btn-success"
+                              data-ng-click="vm.addQuestion(page);"
+                              data-ng-disabled="!addQuestion.$dirty || addQuestion.$invalid">Add</button>
+                      <button type="submit" class="btn btn-default"
+                              data-ng-click="vm.showAddNewQuestionDialog()">Cancel</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </uib-accordion-group>
+    </uib-accordion>
+
+
+
+    <!-- ################## ADD NEW PAGE BUTTON ################## -->
+    <button type="submit" class="btn btn-success" data-ng-click="vm.showAddNewPageDialog();" data-ng-show="!vm.showAddPageDiv" style="margin-bottom: 1.5em;">Add Page</button>
+    <br>
+
+    <!-- ################## ADD NEW PAGE DIV ################## -->
+    <div class="panel panel-green" data-ng-show="vm.showAddPageDiv">
+      <div class="panel-heading"><h4 class="panel-title">Add Page</h4> </div>
       <div class="panel-body">
         <div class="row">
           <div class="col-lg-6">
-            <form role="form" name="createForm" novalidate>
+            <!-- form for oq questions -->
+            <form role="form" name="addPage" novalidate>
               <div class="form-group">
-                <label for="name">Name</label>
-                <input type="text" class="form-control" name="name" id="name"
-                       data-ng-model="vm.questionnaire.name" required>
+                <label>Title</label>
+                <input type="text" class="form-control" data-ng-model="vm.newPage.title" required>
               </div>
 
               <div class="form-group">
-                <label for="progressbar">Show Progressbar</label>
-                <select class="form-control" data-ng-model="vm.questionnaire.progressbar" name="progressbar" id="progressbar">
-                  <option value="true">yes</option>
-                  <option value="false">no</option>
-                </select>
+                <label for="endPage_text">Text</label>
+                <textarea class="form-control" rows="3" data-ng-model="vm.newPage.text"></textarea>
               </div>
-
-              <div class="panel panel-default" data-ng-if="vm.hasStartPage">
-                <div class="panel-heading">Start Page</div>
-                <div class="panel-body">
-                  <div class="row">
-                    <div class="col-lg-12">
-                      <div class="form-group">
-                        <label for="startPage_title">Title</label>
-                        <input type="text" class="form-control" name="startPage_title" id="startPage_title"
-                               data-ng-model="vm.startPage.title">
-                      </div>
-
-                      <div class="form-group">
-                        <label for="startPage_text">Text</label>
-                        <textarea class="form-control" rows="3" data-ng-model="vm.startPage.text" name="startPage_text" id="startPage_text"></textarea>
-                      </div>
-                    </div>
-                  </div>
+              <div class="form-group">
+                <div class="">
+                  <button type="submit" class="btn btn-success"
+                          data-ng-click="vm.addPage();"
+                          data-ng-disabled="!addPage.$dirty || addPage.$invalid">Add</button>
+                  <button type="submit" class="btn btn-default"
+                          data-ng-click="vm.showAddNewPageDialog()">Cancel</button>
                 </div>
               </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
 
-              <div class="panel panel-default" data-ng-if="vm.hasEndPage">
-                <div class="panel-heading">End Page</div>
-                <div class="panel-body">
-                  <div class="row">
-                    <div class="col-lg-12">
-                      <div class="form-group">
-                        <label for="endPage_title">Title</label>
-                        <input type="text" class="form-control" name="endPage_title" id="endPage_title"
-                               data-ng-model="vm.endPage.title">
-                      </div>
 
-                      <div class="form-group">
-                        <label for="endPage_text">Text</label>
-                        <textarea class="form-control" rows="3" data-ng-model="vm.endPage.text" name="endPage_text" id="endPage_text"></textarea>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+    <!-- ################## END PAGE ################## -->
+    <uib-accordion>
+      <uib-accordion-group is-open="status.open" data-ng-if="vm.hasEndPage" panel-class="panel-warning">
+        <uib-accordion-heading>End Page
+          <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+        </uib-accordion-heading>
+        <div class="col-lg-6">
+          <form role="form" name="editEndPage" novalidate>
+            <div class="form-group">
+              <label for="endPage_title">Title</label>
+              <input type="text" class="form-control" name="endPage_title" id="endPage_title"
+                     data-ng-model="vm.endPage.title">
+            </div>
+
+            <div class="form-group">
+              <label for="endPage_text">Text</label>
+              <textarea class="form-control" rows="3" data-ng-model="vm.endPage.text" name="endPage_text" id="endPage_text"></textarea>
+            </div>
+
+            <div class="form-group">
+              <div class="">
+                <button type="submit" class="btn btn-success"
+                        data-ng-click="vm.updateMetaPage(vm.endPage);"
+                        data-ng-disabled="!editEndPage.$dirty || editEndPage.$invalid">Edit</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </uib-accordion-group>
+    </uib-accordion>
+
+  </div>
+  <!-- /.col-lg-12 -->
+</div>
+<!-- /.row -->
+
+<!--
+
+<div class="panel panel-default">
+  <div class="panel-heading">Questionnaire Data </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-lg-6">
+        <form role="form" name="editQuestionnaireData" novalidate>
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" name="name" id="name"
+                   data-ng-model="vm.questionnaire.name" required>
+          </div>
+
+          <div class="form-group">
+            <label for="progressbar">Show Progressbar</label>
+            <select class="form-control" data-ng-model="vm.questionnaire.progressbar" name="progressbar" id="progressbar">
+              <option value="true">yes</option>
+              <option value="false">no</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <div class="">
+              <button type="submit" class="btn btn-success"
+                      data-ng-click="vm.updateQuestionnaireData();"
+                      data-ng-disabled="!editQuestionnaireData.$dirty || editQuestionnaireData.$invalid">Edit</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="panel panel-default" data-ng-if="vm.hasStartPage">
+      <div class="panel-heading">Start Page</div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-lg-6">
+            <form role="form" name="editStartPage" novalidate>
+              <div class="form-group">
+                <label for="startPage_title">Title</label>
+                <input type="text" class="form-control" name="startPage_title" id="startPage_title"
+                       data-ng-model="vm.startPage.title">
+              </div>
+
+              <div class="form-group">
+                <label for="startPage_text">Text</label>
+                <textarea class="form-control" rows="3" data-ng-model="vm.startPage.text" name="startPage_text" id="startPage_text"></textarea>
               </div>
 
               <div class="form-group">
                 <div class="">
                   <button type="submit" class="btn btn-success"
-                          data-ng-click="vm.update();"
-                          data-ng-disabled="!createForm.$dirty || createForm.$invalid">Edit</button>
-                  <button type="submit" class="btn btn-default"
-                          data-ng-click="vm.cancel()">Cancel</button>
+                          data-ng-click="vm.updateMetaPage(vm.startPage);"
+                          data-ng-disabled="!editStartPage.$dirty || editStartPage.$invalid">Edit</button>
                 </div>
-
               </div>
             </form>
           </div>
-          <!-- /.col-lg-6 (nested) -->
         </div>
-        <!-- /.row (nested) -->
       </div>
-      <!-- /.panel-body -->
     </div>
-    <!-- /.panel -->
-  </div>
-  <!-- /.col-lg-12 -->
-</div>
-<!-- /.row -->
+
+<div class="panel panel-default" data-ng-if="vm.hasEndPage">
+      <div class="panel-heading">End Page</div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-lg-6">
+            <form role="form" name="editEndPage" novalidate>
+              <div class="form-group">
+                <label for="endPage_title">Title</label>
+                <input type="text" class="form-control" name="endPage_title" id="endPage_title"
+                       data-ng-model="vm.endPage.title">
+              </div>
+
+              <div class="form-group">
+                <label for="endPage_text">Text</label>
+                <textarea class="form-control" rows="3" data-ng-model="vm.endPage.text" name="endPage_text" id="endPage_text"></textarea>
+              </div>
+
+              <div class="form-group">
+                <div class="">
+                  <button type="submit" class="btn btn-success"
+                          data-ng-click="vm.updateMetaPage(vm.endPage);"
+                          data-ng-disabled="!editEndPage.$dirty || editEndPage.$invalid">Edit</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>-->

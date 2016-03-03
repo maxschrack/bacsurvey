@@ -24,10 +24,19 @@ angular.module('bacsurveyApp')
       update: {method: 'PUT', params: {action: 'updatePage'}}
 
     });
-  });
-  /*.factory('Page', function ($resource, BACSURVEY_API) {
-    return $resource(BACSURVEY_API + 'users/:userId/questionnaires/:questionnaireId/pages/:pageId', {}, {
-      create: {method: 'POST', params: {userId: '@userId'}},
-      update: {method: 'PUT', params: {userId: '@userId'}}
+  })
+  .factory('Page', function ($resource, BACSURVEY_API) {
+    return $resource(BACSURVEY_API + 'pages/:action/:id', {}, {
+      create: {method: 'POST', params: {}},
+      update: {method: 'PUT', params: {}},
+      readAllPerQuestionnaire: {method: 'GET', params: {action: 'getAllPerQuestionnaire', id: '@id'}, isArray: true}
     });
-  });*/
+  })
+  .factory('Question', function ($resource, BACSURVEY_API) {
+    return $resource(BACSURVEY_API + 'questions/:action/:pageId', {}, {
+      createOpenQuestion: {method: 'POST', params: {action: 'newOpenQuestion'}},
+      createMultipleChoiceQuestion: {method: 'POST', params: {action: 'newMultipleChoiceQuestion'}},
+      update: {method: 'PUT', params: {}},
+      readAllPerPage: {method: 'GET', params: {action: 'readAllPerPage', pageId: '@pageId'}, isArray: true}
+    });
+  });
