@@ -1,8 +1,5 @@
 package bac.dto;
 
-/**
- * Created by max on 13/02/16.
- */
 public class MultipleChoiceAnswerDto extends EntityDto {
 
     private Long id;

@@ -3,6 +3,7 @@ package bac.controller;
 import bac.dto.*;
 import bac.exception.ServiceException;
 import bac.model.MultipleChoice;
+import bac.rest.MultipleChoiceAnswerRest;
 import bac.rest.MultipleChoiceRest;
 import bac.rest.OpenQuestionRest;
 import bac.rest.QuestionRest;
@@ -58,7 +59,7 @@ public class QuestionPerPageCtrl {
         if (questionService == null)
             throw new HttpRequestMethodNotSupportedException("POST");
 
-        MultipleChoiceDto temp = questionService.createMultipleChoiceQuestion(DtoFactory.toDto(question));
+        MultipleChoiceDto temp = questionService.createMultipleChoiceQuestion(toDto(question));
 
 
         QuestionDto response = questionService.read(temp.getId());
@@ -68,6 +69,26 @@ public class QuestionPerPageCtrl {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<>(newQuestion, headers, HttpStatus.CREATED);
+    }
+
+    private MultipleChoiceDto toDto(MultipleChoiceRest question){
+        MultipleChoiceDto dto = new MultipleChoiceDto();
+        dto.setText(question.getText());
+        dto.setPageId(question.getPageId());
+        dto.setMandatory(question.getMandatory());
+        dto.setPosition(question.getPosition());
+        dto.setIsSingleChoice(question.getIsSingleChoice());
+        List<MultipleChoiceAnswerDto> answers = new ArrayList<>();
+        for(MultipleChoiceAnswerRest answer : question.getAnswers()){
+            MultipleChoiceAnswerDto answerDto = new MultipleChoiceAnswerDto();
+            answerDto.setText(answer.getText());
+            if(answer.getSelfId() != 0L) {
+                answerDto.setId(answer.getSelfId());
+            }
+            answers.add(answerDto);
+        }
+        dto.setAnswers(answers);
+        return dto;
     }
 
     // READ
@@ -91,28 +112,46 @@ public class QuestionPerPageCtrl {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<>(question, headers, HttpStatus.OK);
-    }
+    }*/
 
     // UPDATE
-    @RequestMapping(method = RequestMethod.PUT, value = "/{questionId}")
-    @ApiOperation(value = "Update a Question", notes = "")
-    public ResponseEntity<QuestionRest> update(@PathVariable Long userId, @PathVariable Long questionnaireId, @PathVariable Long pageId, @PathVariable Long questionId, @RequestBody QuestionRest question, UriComponentsBuilder builder) throws ServiceException, InstantiationException, IllegalAccessException, HttpRequestMethodNotSupportedException {
+    @RequestMapping(method = RequestMethod.PUT, value = "/updateOpenQuestion")
+    @ApiOperation(value = "Update a Open Question", notes = "")
+    public ResponseEntity<QuestionRest> updateOpenQuestion(@RequestBody OpenQuestionRest question, UriComponentsBuilder builder) throws ServiceException, InstantiationException, IllegalAccessException, HttpRequestMethodNotSupportedException {
         if (questionService == null)
             throw new HttpRequestMethodNotSupportedException("PUT");
 
-        QuestionDto toUpdate = DtoFactory.toDto(question);
-        toUpdate.setId(questionId);
-        QuestionDto response = questionService.update(toUpdate);
-        QuestionRest updatedQuestion = ModelFactory.question(response);
+        OpenQuestionDto toUpdate = DtoFactory.toDto(question);
+        toUpdate.setId(question.getSelfId());
+        OpenQuestionDto response = questionService.updateOpenQuestion(toUpdate);
+        OpenQuestionRest updatedQuestion = ModelFactory.openQuestion(response);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(
-                builder.path("/users/{userId}/questionnaires/{questionnaireId}/pages/{pageId}/question/{questionId}\"")
-                        .buildAndExpand(userId, questionnaireId, response.getId().toString()).toUri());
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<>(updatedQuestion, headers, HttpStatus.OK);
     }
 
+    // UPDATE
+    @RequestMapping(method = RequestMethod.PUT, value = "/updateMultipleChoiceQuestion")
+    @ApiOperation(value = "Update a Multiple Choice Question", notes = "")
+    public ResponseEntity<MultipleChoiceRest> updateOpenQuestion(@RequestBody MultipleChoiceRest question, UriComponentsBuilder builder) throws ServiceException, InstantiationException, IllegalAccessException, HttpRequestMethodNotSupportedException {
+        if (questionService == null)
+            throw new HttpRequestMethodNotSupportedException("PUT");
+
+        MultipleChoiceDto toUpdate = toDto(question);
+        toUpdate.setId(question.getSelfId());
+        MultipleChoiceDto temp = questionService.updateMultipleChoiceQuestion(toUpdate);
+
+        QuestionDto response = questionService.read(temp.getId());
+
+        MultipleChoiceRest updatedQuestion = ModelFactory.multipleChoice((MultipleChoiceDto) response);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return new ResponseEntity<>(updatedQuestion, headers, HttpStatus.OK);
+    }
+
+    /*
     @RequestMapping(method = RequestMethod.DELETE, value = "/{questionId}")
     @ApiOperation(value = "Delete a Question", notes = "")
     public ResponseEntity<QuestionRest> delete(@PathVariable Long userId, @PathVariable Long questionnaireId, @PathVariable Long pageId, @PathVariable Long questionId) throws ServiceException, HttpRequestMethodNotSupportedException {

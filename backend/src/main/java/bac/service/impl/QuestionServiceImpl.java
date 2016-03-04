@@ -60,6 +60,8 @@ public class QuestionServiceImpl implements QuestionService{
     }*/
 
     // ##########################   OPEN QUESTION   #################################
+
+    // CREATE
     @Override
     @Transactional
     public OpenQuestionDto createOpenQuestion(OpenQuestionDto toCreate) {
@@ -79,6 +81,23 @@ public class QuestionServiceImpl implements QuestionService{
         return openQuestionConverter.toDto(openQuestion);
     }
 
+    // UPDATE
+    @Override
+    @Transactional
+    public OpenQuestionDto updateOpenQuestion(OpenQuestionDto toUpdate) throws ServiceException {
+
+        // validate
+
+        // convert
+        OpenQuestion oldQuestion = openQuestionConverter.toEntity(toUpdate);
+
+        // update
+        OpenQuestion newQuestion = openQuestionRepository.save(oldQuestion);
+
+        // convert and return
+        return openQuestionConverter.toDto(newQuestion);
+    }
+
 
     // ##########################   MC QUESTION   #################################
     @Override
@@ -96,14 +115,41 @@ public class QuestionServiceImpl implements QuestionService{
         MultipleChoice newMultipleChoice = multipleChoiceRepository.save(multipleChoice);
 
         // Create Answers
-        for(String answer : toCreate.getAnswers()){
+        for(MultipleChoiceAnswerDto answer : toCreate.getAnswers()){
             MultipleChoiceAnswer toSave = new MultipleChoiceAnswer();
-            toSave.setText(answer);
+            toSave.setText(answer.getText());
             toSave.setMultipleChoice(newMultipleChoice);
             multipleChoiceAnswerRepository.save(toSave);
         }
         // convert back and return
         return multipleChoiceConverter.toDto(newMultipleChoice);
+    }
+
+    @Override
+    public MultipleChoiceDto updateMultipleChoiceQuestion(MultipleChoiceDto toUpdate) throws ServiceException {
+
+        // validate
+
+        // convert
+        MultipleChoice oldQuestion = multipleChoiceConverter.toEntity(toUpdate);
+
+        // update
+        MultipleChoice newQuestion = multipleChoiceRepository.save(oldQuestion);
+
+        // DELETE ALL ANSWERS
+        multipleChoiceAnswerRepository.deleteAllAnswersPerQuestion(newQuestion);
+
+        // save answers
+        for(MultipleChoiceAnswerDto answerDto : toUpdate.getAnswers()){
+            MultipleChoiceAnswer answer = new MultipleChoiceAnswer();
+            answer.setId(answerDto.getId());
+            answer.setText(answerDto.getText());
+            answer.setMultipleChoice(newQuestion);
+            multipleChoiceAnswerRepository.save(answer);
+        }
+
+        // convert and return
+        return multipleChoiceConverter.toDto(newQuestion);
     }
 
     @Override
@@ -118,21 +164,6 @@ public class QuestionServiceImpl implements QuestionService{
         return openQuestionConverter.toDto(question);
     }
 
-    @Override
-    @Transactional
-    public OpenQuestionDto updateOpenQuestion(OpenQuestionDto toUpdate) throws ServiceException {
-
-        // validate
-
-        // convert
-        OpenQuestion oldQuestion = openQuestionConverter.toEntity(toUpdate);
-
-        // update
-        OpenQuestion newQuestion = openQuestionRepository.save(oldQuestion);
-
-        // convert and return
-        return openQuestionConverter.toDto(newQuestion);
-    }
 
     @Override
     @Transactional

@@ -12,6 +12,9 @@ angular.module('bacsurveyApp')
     vm.endPage = {};
     vm.newQuestionType = "";
 
+    vm.newOpenQuestion = {};
+    vm.newMultipleChoiceQuestion = {"answers": [{"text": "", "id": 0}]};
+
     vm.optionQuestionType = [{"val": "OQ", "name": "Open Question"}, {"val": "MC", "name": "Multiple Choice"}];
     vm.optionsYesNo = [{"val": true, "name": "yes"}, {"val": false, "name": "no"}];
     vm.optionsValidationType = [{"val": "none", "name": "None"}, {"val": "email", "name": "E-Mail"}, {"val": "number", "name": "Number"}];
@@ -97,6 +100,29 @@ angular.module('bacsurveyApp')
       });
     };
 
+    // UPDATE OPEN QUESTION
+    vm.updateOpenQuestion = function(question){
+      vm.test = Question.updateOpenQuestion({}, question,
+        function (){
+          NotificationHandler.success('Page successfully added!');
+        }, function (error) {
+          ErrorHandler.show(error);
+        });
+
+    }
+
+    // UPDATE MULTIPLE CHOICE QUESTION
+    vm.updateMultipleChoiceQuestion = function(question){
+      vm.test = Question.updateMultipleChoiceQuestion({}, question,
+        function (){
+          NotificationHandler.success('Page successfully added!');
+        }, function (error) {
+          ErrorHandler.show(error);
+        });
+
+    }
+
+
     // CREATE NEW PAGE
     vm.addPage = function () {
       vm.newPage.questionnaireId = vm.questionnaireId;
@@ -104,6 +130,7 @@ angular.module('bacsurveyApp')
 
       // Create Questionnaire
       vm.test = Page.create({}, vm.newPage, function (data) {
+        data.questions = [];
         vm.pageCollection.push(data);
         vm.showAddPageDiv = false;
         vm.newPage = {};
@@ -114,20 +141,48 @@ angular.module('bacsurveyApp')
     };
 
     // CREATE NEW QUESTION
-    vm.addQuestion = function (page) {
-      vm.newQuestion.pageId = page.id;
+    vm.addMultipleChoiceQuestion = function (page) {
+      vm.newMultipleChoiceQuestion.pageId = page.id;
       // TODO: POSITION
 
-      // Create Questionnaire
-      vm.test = Question.createOpenQuestion({}, vm.newQuestion, function (data) {
+      vm.test = Question.createMultipleChoiceQuestion({}, vm.newMultipleChoiceQuestion, function (data) {
         page.questions.push(data);
         vm.showAddQuestionDiv = false;
-        vm.newQuestion = {};
+        vm.newMultipleChoiceQuestion = {};
+        vm.newMultipleChoiceQuestion = {"answers": [{"text": ""}]};
+        vm.newQuestionType = "";
         NotificationHandler.success('Question successfully added!');
       }, function (error) {
         ErrorHandler.show(error);
       });
     };
+
+    vm.addQuestion = function (page) {
+      vm.newQuestion.pageId = page.id;
+      // TODO: POSITION
+
+      vm.test = Question.createOpenQuestion({}, vm.newQuestion, function (data) {
+        page.questions.push(data);
+        vm.showAddQuestionDiv = false;
+        vm.newQuestion = {};
+        vm.newQuestionType = "";
+        NotificationHandler.success('Question successfully added!');
+      }, function (error) {
+        ErrorHandler.show(error);
+      });
+    };
+
+
+    vm.addAnswer = function(question){
+      var newAnswer = {"text":"", "id": 0};
+      question.answers.push(newAnswer);
+    }
+
+    vm.removeAnswer = function(answers, answer){
+      var index = answers.indexOf(answer);
+      answers.splice(index, 1);
+    }
+
 
     // ###################### SHOW NEW PAGE DIALOG * BUTTON
     vm.showAddPageDiv = false;

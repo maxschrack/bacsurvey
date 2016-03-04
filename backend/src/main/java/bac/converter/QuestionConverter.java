@@ -1,9 +1,6 @@
 package bac.converter;
 
-import bac.dto.DtoList;
-import bac.dto.MultipleChoiceDto;
-import bac.dto.OpenQuestionDto;
-import bac.dto.QuestionDto;
+import bac.dto.*;
 import bac.model.*;
 import bac.repository.MultipleChoiceRepository;
 import bac.repository.OpenQuestionRepository;
@@ -51,10 +48,13 @@ public class QuestionConverter{
         }else{
             dto = newMultipleChoiceDto();
             ((MultipleChoiceDto) dto).setIsSingleChoice(((MultipleChoice) entity).getIsSingleChoice());
-            List<String> answers = new ArrayList<>();
+            List<MultipleChoiceAnswerDto> answers = new ArrayList<>();
             if(((MultipleChoice) entity).getAnswers() != null){
                 for(MultipleChoiceAnswer answer : ((MultipleChoice) entity).getAnswers()){
-                    answers.add(answer.getText());
+                    MultipleChoiceAnswerDto multipleChoiceAnswerDto = new MultipleChoiceAnswerDto();
+                    multipleChoiceAnswerDto.setId(answer.getId());
+                    multipleChoiceAnswerDto.setText(answer.getText());
+                    answers.add(multipleChoiceAnswerDto);
                 }
             }
             ((MultipleChoiceDto) dto).setAnswers(answers);
@@ -81,9 +81,9 @@ public class QuestionConverter{
             entity = newMultipleChoiceEntity();
             ((MultipleChoice) entity).setIsSingleChoice(((MultipleChoiceDto) dto).getIsSingleChoice());
             List<MultipleChoiceAnswer> answers = new ArrayList<>();
-            for(String answer : ((MultipleChoiceDto) dto).getAnswers()){
+            for(MultipleChoiceAnswerDto answer : ((MultipleChoiceDto) dto).getAnswers()){
                 MultipleChoiceAnswer temp = new MultipleChoiceAnswer();
-                temp.setText(answer);
+                temp.setText(answer.getText());
                 answers.add(temp);
             }
             ((MultipleChoice) entity).setAnswers(answers);

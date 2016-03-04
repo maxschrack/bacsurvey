@@ -36,7 +36,8 @@ angular.module('bacsurveyApp')
     return $resource(BACSURVEY_API + 'questions/:action/:pageId', {}, {
       createOpenQuestion: {method: 'POST', params: {action: 'newOpenQuestion'}},
       createMultipleChoiceQuestion: {method: 'POST', params: {action: 'newMultipleChoiceQuestion'}},
-      update: {method: 'PUT', params: {}},
+      updateOpenQuestion: {method: 'PUT', params: {action: 'updateOpenQuestion'}},
+      updateMultipleChoiceQuestion: {method: 'PUT', params: {action: 'updateMultipleChoiceQuestion'}},
       readAllPerPage: {method: 'GET', params: {action: 'readAllPerPage', pageId: '@pageId'}, isArray: true}
     });
   });

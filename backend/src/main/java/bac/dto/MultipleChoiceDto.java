@@ -7,7 +7,7 @@ public class MultipleChoiceDto extends QuestionDto {
 
     private boolean isSingleChoice;
 
-    private List<String> answers;
+    private List<MultipleChoiceAnswerDto> answers;
 
     public MultipleChoiceDto() {
         this.answers = new ArrayList<>();
@@ -21,11 +21,11 @@ public class MultipleChoiceDto extends QuestionDto {
         this.isSingleChoice = isSingleChoice;
     }
 
-    public List<String> getAnswers() {
+    public List<MultipleChoiceAnswerDto> getAnswers() {
         return answers;
     }
 
-    public void setAnswers(List<String> answers) {
+    public void setAnswers(List<MultipleChoiceAnswerDto> answers) {
         this.answers = answers;
     }
 

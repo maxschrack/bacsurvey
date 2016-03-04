@@ -6,6 +6,8 @@ import bac.rest.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 
+import java.util.ArrayList;
+
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
@@ -65,7 +67,18 @@ public class ModelFactory {
         MultipleChoiceRest multipleChoiceRest = new MultipleChoiceRest();
         setValuesFromDto(dto, multipleChoiceRest);
         multipleChoiceRest.setType(EQuestionType.mc);
+        multipleChoiceRest.setAnswers(new ArrayList<>());
+        for(MultipleChoiceAnswerDto answerDto : dto.getAnswers()){
+            multipleChoiceRest.getAnswers().add(multipleChoiceAnswer(answerDto));
+        }
+
         return multipleChoiceRest;
+    }
+
+    public static MultipleChoiceAnswerRest multipleChoiceAnswer(MultipleChoiceAnswerDto dto) {
+        MultipleChoiceAnswerRest multipleChoiceAnswerRest = new MultipleChoiceAnswerRest();
+        setValuesFromDto(dto, multipleChoiceAnswerRest);
+        return multipleChoiceAnswerRest;
     }
 
     public static AnswerRest answer(AnswerDto dto) {

@@ -11,7 +11,7 @@ public class MultipleChoiceRest extends QuestionRest {
     private boolean isSingleChoice;
 
     @JsonProperty("answers")
-    private List<String> answers = new ArrayList<>();;
+    private List<MultipleChoiceAnswerRest> answers = new ArrayList<>();;
 
     public boolean getIsSingleChoice() {
         return isSingleChoice;
@@ -21,11 +21,11 @@ public class MultipleChoiceRest extends QuestionRest {
         this.isSingleChoice = isSingleChoice;
     }
 
-    public List<String> getAnswers() {
+    public List<MultipleChoiceAnswerRest> getAnswers() {
         return answers;
     }
 
-    public void setAnswers(List<String> answers) {
+    public void setAnswers(List<MultipleChoiceAnswerRest> answers) {
         this.answers = answers;
     }
 }
