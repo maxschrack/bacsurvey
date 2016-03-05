@@ -1,6 +1,6 @@
 angular.module('bacsurveyApp')
 
-  .controller('EditQuestionnaireCtrl', function ($window, $stateParams, $log, ErrorHandler, Questionnaire, MetaPage, Page, Question, NotificationHandler) {
+  .controller('EditQuestionnaireCtrl', function ($window, $stateParams, $log, ErrorHandler, Questionnaire, MetaPage, Page, Question, NotificationHandler, ngDialog) {
 
     var vm = this;
 
@@ -91,6 +91,28 @@ angular.module('bacsurveyApp')
       });
     };
 
+    // DELETE META PAGE (START AND END PAGE)
+    vm.deleteMetaPage = function (metaPage){
+      var dialog = {};
+      dialog.title = 'Delete';
+      dialog.message = 'Are you sure you want to delete this page?';
+
+      ngDialog.openConfirm({
+        template: 'views/dialogs/confirm-dialog.html',
+        data: dialog
+      }).then(function () {
+        MetaPage.delete({'questionnaireId': metaPage.id}, function () {
+          NotificationHandler.success('Successfully deleted Page!');
+          vm.startPage = {};
+        }, function (error) {
+          ErrorHandler.show(error);
+        });
+
+      }, function (reason) {
+        // admin canceled the process
+      });
+    }
+
     // UPDATE Page DATA
     vm.updatePageData = function(page) {
       Page.update({}, page, function () {
@@ -171,6 +193,29 @@ angular.module('bacsurveyApp')
         ErrorHandler.show(error);
       });
     };
+
+    vm.deleteQuestion = function(questions, question){
+      var dialog = {};
+      dialog.title = 'Delete';
+      dialog.message = 'Are you sure you want to delete this question?';
+
+      ngDialog.openConfirm({
+        template: 'views/dialogs/confirm-dialog.html',
+        data: dialog
+      }).then(function () {
+        Question.delete({'pageId': question.id}, function () {
+          var index = questions.indexOf(question);
+          questions.splice(index, 1);
+          NotificationHandler.success('Successfully deleted Question!');
+
+        }, function (error) {
+          ErrorHandler.show(error);
+        });
+
+      }, function (reason) {
+        // admin canceled the process
+      });
+    }
 
 
     vm.addAnswer = function(question){

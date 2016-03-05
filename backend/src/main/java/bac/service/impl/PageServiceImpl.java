@@ -115,6 +115,9 @@ public class PageServiceImpl implements PageService{
         finder.setId(questionnaireDto.getId());
         List<Page> result = pageRepository.findByQuestionnaire(finder);
 
+        for(Page page : result){
+            page.setQuestions(null);
+        }
         // convert and return
         return pageConverter.toDtoList(result);
     }

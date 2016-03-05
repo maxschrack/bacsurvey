@@ -7,9 +7,6 @@ import bac.model.enums.EStatus;
 
 import java.util.ArrayList;
 
-/**
- * Created by max on 16/02/16.
- */
 public class TestData {
 
     public static User getUser_Creator(){
@@ -43,7 +40,7 @@ public class TestData {
         metaPage.setId(1L);
         metaPage.setTitle("Start Page");
         metaPage.setText("Test Text on Start Page");
-        metaPage.setDeleted(false);
+        //metaPage.setDeleted(false);
         //metaPage.setQuestionnaire(getQuestionnaire());
 
         return metaPage;
@@ -54,7 +51,7 @@ public class TestData {
         metaPage.setId(2L);
         metaPage.setTitle("End Page");
         metaPage.setText("Test Text on End Page");
-        metaPage.setDeleted(false);
+        //metaPage.setDeleted(false);
         //metaPage.setQuestionnaire(getQuestionnaire());
 
         return metaPage;

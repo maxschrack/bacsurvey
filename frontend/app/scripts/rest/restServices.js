@@ -21,8 +21,8 @@ angular.module('bacsurveyApp')
       createEndPage: {method: 'POST', params: {action: 'newEndPage'}},
       getStartPage: {method: 'GET', params: {action: 'getStartPage', questionnaireId: '@questionnaireId'}},
       getEndPage: {method: 'GET', params: {action: 'getEndPage', questionnaireId: '@questionnaireId'}},
-      update: {method: 'PUT', params: {action: 'updatePage'}}
-
+      update: {method: 'PUT', params: {action: 'updatePage'}},
+      delete: {method: 'DELETE', params: {action: 'deletePage', questionnaireId: '@questionnaireId'}}
     });
   })
   .factory('Page', function ($resource, BACSURVEY_API) {
@@ -38,6 +38,7 @@ angular.module('bacsurveyApp')
       createMultipleChoiceQuestion: {method: 'POST', params: {action: 'newMultipleChoiceQuestion'}},
       updateOpenQuestion: {method: 'PUT', params: {action: 'updateOpenQuestion'}},
       updateMultipleChoiceQuestion: {method: 'PUT', params: {action: 'updateMultipleChoiceQuestion'}},
-      readAllPerPage: {method: 'GET', params: {action: 'readAllPerPage', pageId: '@pageId'}, isArray: true}
+      readAllPerPage: {method: 'GET', params: {action: 'readAllPerPage', pageId: '@pageId'}, isArray: true},
+      delete: {method: 'DELETE', params: {action: 'delete', pageId: '@pageId'}}
     });
   });

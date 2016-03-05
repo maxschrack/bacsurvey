@@ -151,21 +151,21 @@ public class QuestionPerPageCtrl {
         return new ResponseEntity<>(updatedQuestion, headers, HttpStatus.OK);
     }
 
-    /*
-    @RequestMapping(method = RequestMethod.DELETE, value = "/{questionId}")
+
+    @RequestMapping(method = RequestMethod.DELETE, value = "/delete/{questionId}")
     @ApiOperation(value = "Delete a Question", notes = "")
-    public ResponseEntity<QuestionRest> delete(@PathVariable Long userId, @PathVariable Long questionnaireId, @PathVariable Long pageId, @PathVariable Long questionId) throws ServiceException, HttpRequestMethodNotSupportedException {
+    public ResponseEntity<QuestionRest> delete(@PathVariable Long questionId) throws ServiceException, HttpRequestMethodNotSupportedException {
         if (questionService == null)
             throw new HttpRequestMethodNotSupportedException("DELETE");
 
-        QuestionDto response = questionService.delete(new QuestionDto(questionId));
-        QuestionRest c = ModelFactory.question(response);
+        questionService.delete(questionId);
+
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        return new ResponseEntity<>(c, headers, HttpStatus.OK);
+        return new ResponseEntity<>(headers, HttpStatus.OK);
     }
-    */
+
 
     // READ ALL PER Questionnaire
     @RequestMapping(method = RequestMethod.GET, value="/readAllPerPage/{pageId}")

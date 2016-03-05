@@ -67,7 +67,7 @@
                 <button type="submit" class="btn btn-success"
                         data-ng-click="vm.updateMetaPage(vm.startPage);"
                         data-ng-disabled="!editStartPage.$dirty || editStartPage.$invalid">Edit</button>
-              </div>
+                </div>
             </div>
           </form>
         </div>
@@ -159,6 +159,8 @@
                               data-ng-click="vm.updateOpenQuestion(question);"
                               >Edit</button>
                       <!-- data-ng-disabled="!editQuestionData_{{$index}}.$dirty || editQuestionData_{{$index}}.$invalid"-->
+                      <button type="button" class="btn btn-danger" data-ng-click="vm.deleteQuestion(page.questions, question);">Delete</button>
+
                     </div>
                   </div>
                 </form>
@@ -211,6 +213,8 @@
                               data-ng-click="vm.updateMultipleChoiceQuestion(question);"
                               >Edit</button>
                       <!--data-ng-disabled="!editQuestionData_{{$index}}.$dirty || editQuestionData_{{$index}}.$invalid"-->
+                      <button type="button" class="btn btn-danger" data-ng-click="vm.deleteQuestion(page.questions, question);">Delete</button>
+
                     </div>
                   </div>
                 </form>

@@ -13,6 +13,8 @@ public interface QuestionService {
     OpenQuestionDto updateOpenQuestion(OpenQuestionDto toUpdate) throws ServiceException;
     OpenQuestionDto deleteOpenQuestion(OpenQuestionDto toDelete) throws ServiceException;
 
+    void delete(Long questionId) throws ServiceException;
+
     // MULTIPLE CHOICE
     MultipleChoiceDto createMultipleChoiceQuestion(MultipleChoiceDto toCreate);
     MultipleChoiceDto updateMultipleChoiceQuestion(MultipleChoiceDto toUpdate) throws ServiceException;

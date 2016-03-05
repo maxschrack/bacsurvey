@@ -9,9 +9,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Created by max on 08/02/16.
- */
 @Entity
 @Table(name="system_user")
 @Where(clause = "deleted='f'")

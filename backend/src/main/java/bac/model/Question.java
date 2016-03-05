@@ -39,6 +39,9 @@ public class Question extends bac.model.Entity{
 
     public Question() {
     }
+    public Question(Long id) {
+        this.id = id;
+    }
 
     public Question(String text, boolean mandatory, int position, boolean deleted, Page page) {
         this.text = text;

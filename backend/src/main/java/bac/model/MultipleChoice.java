@@ -18,6 +18,10 @@ public class MultipleChoice extends Question{
 
     public MultipleChoice(){}
 
+    public MultipleChoice(Long id){
+        super(id);
+    }
+
     public MultipleChoice(String text, boolean mandatory, int position, boolean deleted, Page page, boolean isSingleChoice, List<MultipleChoiceAnswer> answers) {
         super(text, mandatory, position, deleted, page);
         this.isSingleChoice = isSingleChoice;

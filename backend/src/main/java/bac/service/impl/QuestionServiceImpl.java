@@ -181,6 +181,15 @@ public class QuestionServiceImpl implements QuestionService{
     }
 
     @Override
+    @Transactional
+    public void delete(Long questionId) throws ServiceException {
+
+        multipleChoiceAnswerRepository.deleteAllAnswersPerQuestion(new MultipleChoice(questionId));
+
+        questionRepository.delete(questionId);
+    }
+
+    @Override
     public DtoList<QuestionDto> readAllPerPage(PageDto pageDto) {
 
         // validate

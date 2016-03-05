@@ -5,14 +5,17 @@ import bac.model.enums.EValidationType;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Created by max on 13/02/16.
- */
 public class OpenQuestionDto extends QuestionDto{
 
     private EValidationType validationType;
 
     private boolean isLong;
+
+    public OpenQuestionDto(){}
+
+    public OpenQuestionDto(Long id) {
+        super(id);
+    }
 
     public EValidationType getValidationType() {
         return validationType;
