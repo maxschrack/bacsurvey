@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/questionnaires/{questionnaireId}/participants")
+@RequestMapping("/participants")
 @Api(value = "/participant", description = "Participant Administration")
 public class ParticipantCtrl {
 
@@ -36,7 +36,7 @@ public class ParticipantCtrl {
     // CREATE
     @RequestMapping(method = RequestMethod.POST, value = "/newParticipant")
     @ApiOperation(value = "Create new Participant", notes = "")
-    public ResponseEntity<ParticipantRest> createStartParticipant(@PathVariable Long questionnaireId, @RequestBody ParticipantRest participant, UriComponentsBuilder builder) throws ServiceException, InstantiationException, IllegalAccessException, HttpRequestMethodNotSupportedException {
+    public ResponseEntity<ParticipantRest> createStartParticipant(@RequestBody ParticipantRest participant, UriComponentsBuilder builder) throws ServiceException, InstantiationException, IllegalAccessException, HttpRequestMethodNotSupportedException {
         if (participantService == null)
             throw new HttpRequestMethodNotSupportedException("POST");
 
@@ -44,17 +44,14 @@ public class ParticipantCtrl {
         ParticipantRest newParticipant = ModelFactory.participant(response);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(
-                builder.path("/questionnaires/{questionnaireId}/participant/{participantId}")
-                        .buildAndExpand(questionnaireId, response.getId().toString()).toUri());
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<>(newParticipant, headers, HttpStatus.CREATED);
     }
 
     // READ
-    @RequestMapping(method = RequestMethod.GET, value = "/{participantId}")
+    @RequestMapping(method = RequestMethod.GET, value = "/get/{id}")
     @ApiOperation(value = "Retrieve an Participant", notes = "")
-    public ResponseEntity<ParticipantRest> read(@PathVariable Long questionnaireId, @PathVariable Long participantId) throws ServiceException, HttpRequestMethodNotSupportedException {
+    public ResponseEntity<ParticipantRest> read(@PathVariable Long participantId) throws ServiceException, HttpRequestMethodNotSupportedException {
         if (participantService == null)
             throw new HttpRequestMethodNotSupportedException("GET");
 
@@ -69,9 +66,9 @@ public class ParticipantCtrl {
     }
 
     // READ ALL PER Questionnaire
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET, value = "/getAllPerQuestionnaire/{id)")
     @ApiOperation(value = "Retrieve all Participants per Questionnaire", notes = "")
-    public ResponseEntity<List<ParticipantRest>> read(@PathVariable Long questionnaireId) throws ServiceException, HttpRequestMethodNotSupportedException {
+    public ResponseEntity<List<ParticipantRest>> readAllPerQuestionnaire(@PathVariable Long questionnaireId) throws ServiceException, HttpRequestMethodNotSupportedException {
         if (participantService == null)
             throw new HttpRequestMethodNotSupportedException("GET");
 

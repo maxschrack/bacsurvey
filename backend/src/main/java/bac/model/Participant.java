@@ -23,7 +23,7 @@ public class Participant extends bac.model.Entity {
     @SequenceGenerator(initialValue = 1, name = "seq_participant_id", sequenceName = "seq_participant_id")
     private Long id;
 
-    @Column(name="email", unique=true)
+    @Column(name="email")
     private String email;
 
     @Column(name="password")

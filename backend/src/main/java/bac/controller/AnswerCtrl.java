@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/questionnaires/{questionnaireId}")
+@RequestMapping("/answers")
 @Api(value = "/answers", description = "Answer Administration")
 public class AnswerCtrl {
 
@@ -33,9 +33,9 @@ public class AnswerCtrl {
     }
 
     // CREATE
-    @RequestMapping(method = RequestMethod.POST, value = "/participants/{participantId}/{questionId}")
+    @RequestMapping(method = RequestMethod.POST, value="/newAnswer")
     @ApiOperation(value = "Create new Answer", notes = "")
-    public ResponseEntity<AnswerRest> create(@PathVariable Long questionnaireId, @PathVariable Long participantId, @PathVariable Long questionId, @RequestBody AnswerRest answer, UriComponentsBuilder builder) throws ServiceException, InstantiationException, IllegalAccessException, HttpRequestMethodNotSupportedException {
+    public ResponseEntity<AnswerRest> create(@RequestBody AnswerRest answer, UriComponentsBuilder builder) throws ServiceException, InstantiationException, IllegalAccessException, HttpRequestMethodNotSupportedException {
         if (answerService == null)
             throw new HttpRequestMethodNotSupportedException("POST");
 
@@ -48,9 +48,9 @@ public class AnswerCtrl {
     }
 
     // READ ALL PER Questionnaire
-    @RequestMapping(method = RequestMethod.GET, value="/questions/{questionId}/getAllAnswers")
+    @RequestMapping(method = RequestMethod.GET, value="/getAllPerQuestion/{questionId}")
     @ApiOperation(value = "Retrieve all Answers per Question", notes = "")
-    public ResponseEntity<List<AnswerRest>> readAllAnswersPerQuestion(@PathVariable Long questionnaireId, @PathVariable Long questionId) throws ServiceException, HttpRequestMethodNotSupportedException {
+    public ResponseEntity<List<AnswerRest>> readAllAnswersPerQuestion(@PathVariable Long questionId) throws ServiceException, HttpRequestMethodNotSupportedException {
         if (answerService == null)
             throw new HttpRequestMethodNotSupportedException("GET");
 
@@ -67,7 +67,7 @@ public class AnswerCtrl {
     }
 
     // READ ALL PER Questionnaire
-    @RequestMapping(method = RequestMethod.GET, value="/participant/{participantId}/getAllAnswers")
+    @RequestMapping(method = RequestMethod.GET, value="/getAllPerParticipant/{participantId}")
     @ApiOperation(value = "Retrieve all Answers per Participant", notes = "")
     public ResponseEntity<List<AnswerRest>> readAllAnswersPerParticipant(@PathVariable Long questionnaireId, @PathVariable Long participantId) throws ServiceException, HttpRequestMethodNotSupportedException {
         if (answerService == null)

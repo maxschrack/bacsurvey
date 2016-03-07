@@ -2,6 +2,6 @@ package bac.rest;
 
 
 public interface IdentifiableRest {
-    long getSelfId();
+    Long getSelfId();
     void setSelfId(Long selfId);
 }

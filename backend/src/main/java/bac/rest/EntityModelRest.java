@@ -9,7 +9,7 @@ public abstract class EntityModelRest extends BaseModelRest implements Identifia
     @ApiModelProperty(required = true, notes = "readonly")
     private Long selfId;
 
-    public long getSelfId() {
+    public Long getSelfId() {
         return selfId;
     }
 

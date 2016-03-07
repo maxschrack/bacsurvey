@@ -82,7 +82,7 @@ public class QuestionPerPageCtrl {
         for(MultipleChoiceAnswerRest answer : question.getAnswers()){
             MultipleChoiceAnswerDto answerDto = new MultipleChoiceAnswerDto();
             answerDto.setText(answer.getText());
-            if(answer.getSelfId() != 0L) {
+            if(answer.getSelfId()!= null && answer.getSelfId() != 0L) {
                 answerDto.setId(answer.getSelfId());
             }
             answers.add(answerDto);

@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 
 @RestController
-@RequestMapping("/users/{userId}/questionnaires")
+@RequestMapping("/questionnaires")
 @Api(value = "/questionnaires", description = "Questionnaire Administration")
 public class QuestionnaireCtrl {
 
@@ -39,7 +39,7 @@ public class QuestionnaireCtrl {
     // CREATE
     @RequestMapping(method = RequestMethod.POST)
     @ApiOperation(value = "Create a new Questionnaire", notes = "")
-    public ResponseEntity<QuestionnaireRest> create(@PathVariable Long userId, @RequestBody QuestionnaireRest questionnaire, UriComponentsBuilder builder) throws ServiceException, InstantiationException, IllegalAccessException, HttpRequestMethodNotSupportedException {
+    public ResponseEntity<QuestionnaireRest> create(@RequestBody QuestionnaireRest questionnaire, UriComponentsBuilder builder) throws ServiceException, InstantiationException, IllegalAccessException, HttpRequestMethodNotSupportedException {
         if (questionnaireService == null)
             throw new HttpRequestMethodNotSupportedException("POST");
 
@@ -47,17 +47,14 @@ public class QuestionnaireCtrl {
         QuestionnaireRest newQuestionnaire = ModelFactory.questionnaire(response);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(
-                builder.path("/users/{userId}/questionnaires/{questionnaireId}")
-                        .buildAndExpand(userId, response.getId().toString()).toUri());
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<>(newQuestionnaire, headers, HttpStatus.CREATED);
     }
 
     // READ
-    @RequestMapping(method = RequestMethod.GET, value = "/{questionnaireId}")
+    @RequestMapping(method = RequestMethod.GET, value = "/get/{questionnaireId}")
     @ApiOperation(value = "Retrieve an Questionnaire", notes = "")
-    public ResponseEntity<QuestionnaireRest> read(@PathVariable Long userId, @PathVariable Long questionnaireId) throws ServiceException, HttpRequestMethodNotSupportedException {
+    public ResponseEntity<QuestionnaireRest> read(@PathVariable Long questionnaireId) throws ServiceException, HttpRequestMethodNotSupportedException {
         if (questionnaireService == null)
             throw new HttpRequestMethodNotSupportedException("GET");
 
@@ -72,14 +69,14 @@ public class QuestionnaireCtrl {
     }
 
     // UPDATE
-    @RequestMapping(method = RequestMethod.PUT, value = "/{questionnaireId}")
+    @RequestMapping(method = RequestMethod.PUT)
     @ApiOperation(value = "Update a Questionnaire", notes = "")
-    public ResponseEntity<QuestionnaireRest> update(@PathVariable Long userId, @PathVariable Long questionnaireId, @RequestBody QuestionnaireRest questionnaire, UriComponentsBuilder builder) throws ServiceException, InstantiationException, IllegalAccessException, HttpRequestMethodNotSupportedException {
+    public ResponseEntity<QuestionnaireRest> update(@RequestBody QuestionnaireRest questionnaire, UriComponentsBuilder builder) throws ServiceException, InstantiationException, IllegalAccessException, HttpRequestMethodNotSupportedException {
         if (questionnaireService == null)
             throw new HttpRequestMethodNotSupportedException("PUT");
 
         QuestionnaireDto toUpdate = DtoFactory.toDto(questionnaire);
-        toUpdate.setId(questionnaireId);
+        toUpdate.setId(questionnaire.getSelfId());
         QuestionnaireDto response = questionnaireService.update(toUpdate);
         QuestionnaireRest updatedQuestionnaire = ModelFactory.questionnaire(response);
 
@@ -91,7 +88,7 @@ public class QuestionnaireCtrl {
     // DELETE
     @RequestMapping(method = RequestMethod.DELETE, value = "/{questionnaireId}")
     @ApiOperation(value = "Delete a Questionnaire", notes = "")
-    public ResponseEntity<QuestionnaireRest> delete(@PathVariable Long userId, @PathVariable Long questionnaireId) throws ServiceException, HttpRequestMethodNotSupportedException {
+    public ResponseEntity<QuestionnaireRest> delete(@PathVariable Long questionnaireId) throws ServiceException, HttpRequestMethodNotSupportedException {
         if (questionnaireService == null)
             throw new HttpRequestMethodNotSupportedException("DELETE");
 
@@ -105,19 +102,13 @@ public class QuestionnaireCtrl {
 
     // READ ALL PER USER
     // READ
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET, value="/getAllPerUser/{id}")
     @ApiOperation(value = "Retrieve all Questionnaires per User", notes = "")
-    public ResponseEntity<List<QuestionnaireRest>> readAllPerUser(@PathVariable Long userId) throws ServiceException {
+    public ResponseEntity<List<QuestionnaireRest>> readAllPerUser(@PathVariable Long id) throws ServiceException {
 
-        DtoList<QuestionnaireDto> response =
-                questionnaireService.readAllPerUser(new UserDto(userId));
-        /*List<QuestionnaireRest> questionnaires = new ArrayList<>();
-        for(QuestionnaireDto dto : response){
-            questionnaires.add(ModelFactory.questionnaire(dto));
-        }*/
+        DtoList<QuestionnaireDto> response = questionnaireService.readAllPerUser(new UserDto(id));
 
         List<QuestionnaireRest> questionnaires = response.stream().map(ModelFactory::questionnaire).collect(Collectors.toList());
-
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

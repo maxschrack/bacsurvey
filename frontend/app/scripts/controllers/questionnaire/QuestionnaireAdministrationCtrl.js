@@ -12,7 +12,7 @@ angular.module('bacsurveyApp')
     vm.userId = 1;
 
     // get the list of all questionnaires per user
-    vm.questionnaireCollection = Questionnaire.readAllPerUser({'userId': vm.userId},
+    vm.questionnaireCollection = Questionnaire.readAllPerUser({'id': vm.userId},
       function () {
       },function (error) {
         ErrorHandler.show(error);
@@ -34,5 +34,9 @@ angular.module('bacsurveyApp')
     };
     vm.editQuestionnaire = function (questionnaire) {
       $state.go('editQuestionnaire', {'userId': vm.userId, 'questionnaireId': questionnaire.id});
+    }
+
+    vm.runQuestionnaire = function (questionnaire){
+      $state.go('runQuestionnaire', {'questionnaireId': questionnaire.id});
     }
   });

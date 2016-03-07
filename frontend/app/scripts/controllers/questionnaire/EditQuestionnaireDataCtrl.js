@@ -10,10 +10,12 @@ angular.module('bacsurveyApp')
     vm.hasEndPage = false;
     vm.startPage = {};
     vm.endPage = {};
+    vm.optionsYesNo = [{"val": true, "name": "yes"}, {"val": false, "name": "no"}];
+
 
 
     // read data
-    vm.questionnaire = Questionnaire.get({'userId': vm.userId, 'questionnaireId': vm.questionnaireId}, function () {
+    vm.questionnaire = Questionnaire.getQuestionnaire({'id': vm.questionnaireId}, function () {
       if (vm.questionnaire.startPageId != null){
         vm.startPage = MetaPage.getStartPage({'questionnaireId': vm.questionnaireId
         }, function () {
@@ -45,7 +47,7 @@ angular.module('bacsurveyApp')
     vm.update = function () {
 
       // Update Questionnaire
-      vm.newQuestionnaire = Questionnaire.update({'userId': vm.userId, 'questionnaireId': vm.questionnaireId}, vm.questionnaire, function () {
+      vm.newQuestionnaire = Questionnaire.update({}, vm.questionnaire, function () {
 
         // edit startPage
         if(vm.hasStartPage){

@@ -1,0 +1,82 @@
+<div class="row">
+  <div class="col-lg-12">
+    <h2 class="page-header"><i>{{vm.questionnaire.name}}</i></h2>
+  </div>
+  <!-- /.col-lg-12 -->
+</div>
+<!-- /.row -->
+<div class="row">
+  <div class="col-lg-8">
+
+    <!-- ################## START PAGE ################## -->
+    <div class="panel panel-primary" data-ng-show="vm.showStartPage">
+      <div class="panel-heading">
+        <h2>{{vm.startPage.title}}</h2>
+      </div>
+      <div class="panel-body">
+        {{vm.startPage.text}}
+      </div>
+      <div class="panel-footer" style="height: 4em;">
+        <button type="submit" class="btn btn-success pull-right" data-ng-click="vm.startQuestionnaire();">Start</button>
+      </div>
+    </div>
+
+    <!-- ################## PAGE ################## -->
+
+    <div class="panel panel-primary" data-ng-show="vm.showPage">
+      <div class="panel-heading">
+        <h2>{{vm.pages[vm.currentPage].title}}</h2>
+      </div>
+      <div class="panel-body">
+
+        <div>
+          <uib-progressbar max="vm.pageCounter" value="vm.currentPage+1"><span style="color:white; white-space:nowrap;">{{vm.currentPage+1}} / {{vm.pageCounter}}</span></uib-progressbar>
+        </div>
+        <!-- PAGE DESCRIPTION -->
+        <div class="well well-lg">
+          {{vm.pages[vm.currentPage].text}}
+        </div>
+        <div ng-repeat="question in vm.questions" ng-init="questionIndex = $index">
+          <!-- OPEN QUESTION -->
+          <div class="form-group" data-ng-show="question.type === 'oq'">
+            <label>{{question.text}}</label>
+            <input type="text" class="form-control" data-ng-show="!question.isLong" data-ng-model="vm.answers[questionIndex].answer">
+            <textarea class="form-control" rows="3"  data-ng-show="question.isLong" data-ng-model="vm.answers[questionIndex].answer"></textarea>
+            <br>
+          </div>
+
+          <!-- MULTIPLE CHOICE QUESTION -->
+          <div class="form-group" data-ng-show="question.type === 'mc'">
+            <label>{{question.text}}</label>
+            <div ng-repeat="answer in question.answers" style="margin-bottom: 0.2em;">
+              <div class="{{vm.getTypeForMC(question);}}">
+                <label>
+                  <input type="{{vm.getTypeForMC(question);}}" value="{{answer.text}}" data-ng-model="vm.answers[questionIndex].answer" data-ng-show="question.isSingleChoice">
+                  <input type="{{vm.getTypeForMC(question);}}" value="{{answer.text}}" data-ng-model="vm.answers[questionIndex].mc[$index]" data-ng-show="!question.isSingleChoice">
+                  {{answer.text}}
+                </label>
+              </div>
+            </div>
+            <br>
+          </div>
+        </div>
+      </div>
+      <div class="panel-footer" style="height: 4em;">
+        <button type="submit" class="btn btn-default pull-left" data-ng-click="vm.cancelQuestionnaire(vm.pages[vm.currentPage]);">Cancel</button>
+        <button type="submit" class="btn btn-success pull-right" data-ng-click="vm.nextPage();">Next</button>
+      </div>
+    </div>
+
+    <!-- ################## END PAGE ################## -->
+    <div class="panel panel-primary" data-ng-show="vm.showEndPage">
+      <div class="panel-heading">
+        <h2>{{vm.endPage.title}}</h2>
+      </div>
+      <div class="panel-body">
+        {{vm.endPage.text}}
+      </div>
+      <div class="panel-footer" style="height: 4em;">
+      </div>
+    </div>
+  </div>
+</div>

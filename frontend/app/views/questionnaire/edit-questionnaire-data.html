@@ -22,11 +22,11 @@
               </div>
 
               <div class="form-group">
-                <label for="progressbar">Show Progressbar</label>
-                <select class="form-control" data-ng-model="vm.questionnaire.progressbar" name="progressbar" id="progressbar">
-                  <option value="true">yes</option>
-                  <option value="false">no</option>
-                </select>
+                <label >Show Progressbar</label>
+                <select
+                  data-ng-model="vm.questionnaire.progressbar"
+                  data-ng-options="option.val as option.name for option in vm.optionsYesNo"
+                  class="form-control"></select>
               </div>
 
               <div class="panel panel-default" data-ng-if="vm.hasStartPage">

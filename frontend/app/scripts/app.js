@@ -61,5 +61,11 @@ angular
         templateUrl: 'views/questionnaire/edit-questionnaire.html',
         controller: 'EditQuestionnaireCtrl',
         controllerAs: 'vm'
+      })
+      .state('runQuestionnaire', {
+        url: '/runQuestionnaire/:questionnaireId',
+        templateUrl: 'views/questionnaire/run-questionnaire.html',
+        controller: 'RunQuestionnaireCtrl',
+        controllerAs: 'vm'
       });
   });

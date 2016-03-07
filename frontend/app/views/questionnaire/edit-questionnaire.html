@@ -23,11 +23,11 @@
             </div>
 
             <div class="form-group">
-              <label for="progressbar">Show Progressbar</label>
-              <select class="form-control" data-ng-model="vm.questionnaire.progressbar" name="progressbar" id="progressbar">
-                <option value="true">yes</option>
-                <option value="false">no</option>
-              </select>
+              <label>Show Progressbar</label>
+              <select
+                data-ng-model="vm.questionnaire.progressbar"
+                data-ng-options="option.val as option.name for option in vm.optionsYesNo"
+                class="form-control"></select>
             </div>
 
             <div class="form-group">
@@ -73,6 +73,45 @@
         </div>
       </uib-accordion-group>
     </uib-accordion>
+
+    <!-- ################## ADD START PAGE ##################
+    <button type="submit" class="btn btn-success" data-ng-click="vm.showAddNewStartPageDialog();" data-ng-show="!vm.hasStartPage" style="margin-bottom: 1.5em;">Add Start Page</button>
+    <br>-->
+
+    <!-- ################## ADD NEW START DIV ##################
+    <div class="panel panel-green" data-ng-show="vm.showAddStartPageDiv">
+      <div class="panel-heading"><h4 class="panel-title">Add Start Page</h4> </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-lg-6">
+            <form role="form" name="addStartPage" novalidate>
+              <div class="form-group">
+                <label>Title</label>
+                <input type="text" class="form-control" data-ng-model="vm.newStartPage.title" required>
+              </div>
+
+              <div class="form-group">
+                <label for="endPage_text">Text</label>
+                <textarea class="form-control" rows="3" data-ng-model="vm.newStartPage.text"></textarea>
+              </div>
+              <div class="form-group">
+                <div class="">
+                  <button type="submit" class="btn btn-success"
+                          data-ng-click="vm.addStartPage();"
+                          data-ng-disabled="!addStartPage.$dirty || addStartPage.$invalid">Add</button>
+                  <button type="submit" class="btn btn-default"
+                          data-ng-click="vm.showAddNewStartPageDialog()">Cancel</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>-->
+
+
+
+
 
     <!-- ################## PAGES ################## -->
     <uib-accordion ng-repeat="page in vm.pageCollection">
@@ -150,7 +189,6 @@
                       data-ng-model="question.validationType"
                       data-ng-options="option.val as option.name for option in vm.optionsValidationType"
                       class="form-control"></select>
-                    </select>
                   </div>
 
                   <div class="form-group">

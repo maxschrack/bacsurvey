@@ -9,6 +9,7 @@ angular.module('bacsurveyApp')
     vm.hasStartPage = false;
     vm.hasEndPage = false;
     vm.startPage = {};
+    vm.newStartPage = {};
     vm.endPage = {};
     vm.newQuestionType = "";
 
@@ -19,8 +20,29 @@ angular.module('bacsurveyApp')
     vm.optionsYesNo = [{"val": true, "name": "yes"}, {"val": false, "name": "no"}];
     vm.optionsValidationType = [{"val": "none", "name": "None"}, {"val": "email", "name": "E-Mail"}, {"val": "number", "name": "Number"}];
 
+    // ###################### SHOW NEW PAGE DIALOG * BUTTON
+    vm.showAddPageDiv = false;
+    vm.newPage = {};
+    vm.showAddNewPageDialog = function(){
+      vm.showAddPageDiv = !vm.showAddPageDiv;
+    }
+
+    // ###################### SHOW NEW QUESTION DIALOG * BUTTON
+    vm.newQuestion = {};
+    vm.showAddQuestionDiv = false;
+    vm.showAddNewQuestionDialog = function(){
+      vm.showAddQuestionDiv = !vm.showAddQuestionDiv;
+    }
+
+    // ###################### SHOW NEW START PAGE DIALOG * BUTTON
+    /*vm.showAddStartPageDiv = false;
+    //vm.newStartPage = {};
+    vm.showAddNewStartPageDialog = function(){
+      vm.showAddStartPageDiv = !vm.showAddStartPageDiv;
+    }*/
+
     // read data
-    vm.questionnaire = Questionnaire.get({'userId': vm.userId, 'questionnaireId': vm.questionnaireId}, function () {
+    vm.questionnaire = Questionnaire.getQuestionnaire({'id': vm.questionnaireId}, function () {
 
       // GET START PAGE
       if (vm.questionnaire.startPageId != null){
@@ -194,6 +216,21 @@ angular.module('bacsurveyApp')
       });
     };
 
+    // CREATE START PAGE
+    /*vm.addStartPage = function () {
+      vm.newStartPage.questionnaireId = vm.questionnaireId;
+      vm.startPage = MetaPage.createStartPage({}, vm.newStartPage, function () {
+        vm.hasStartPage = true;
+        vm.showAddStartPageDiv = false;
+        NotificationHandler.success('Start Page successfully added!');
+      }, function (error) {
+        ErrorHandler.show(error);
+      });
+    };*/
+
+
+
+
     vm.deleteQuestion = function(questions, question){
       var dialog = {};
       dialog.title = 'Delete';
@@ -226,21 +263,10 @@ angular.module('bacsurveyApp')
     vm.removeAnswer = function(answers, answer){
       var index = answers.indexOf(answer);
       answers.splice(index, 1);
-    }
 
-
-    // ###################### SHOW NEW PAGE DIALOG * BUTTON
-    vm.showAddPageDiv = false;
-    vm.newPage = {};
-    vm.showAddNewPageDialog = function(){
-      vm.showAddPageDiv = !vm.showAddPageDiv;
-    }
-
-    // ###################### SHOW NEW PAGE DIALOG * BUTTON
-    vm.newQuestion = {};
-    vm.showAddQuestionDiv = false;
-    vm.showAddNewQuestionDialog = function(){
-      vm.showAddQuestionDiv = !vm.showAddQuestionDiv;
+      if(answers.length == 0){
+        answers.push({"text":"", "id": 0});
+      };
     }
   }
 

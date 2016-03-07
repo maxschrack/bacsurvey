@@ -8,11 +8,11 @@ angular.module('bacsurveyApp')
     });
   })
   .factory('Questionnaire', function ($resource, BACSURVEY_API) {
-    return $resource(BACSURVEY_API + 'users/:userId/questionnaires/:questionnaireId', {}, {
-      create: {method: 'POST', params: {userId: '@userId'}},
-      update: {method: 'PUT', params: {userId: '@userId'}},
-      getQuestionnaire: {method: 'GET', params: {userId: '@userId', questionnaireId: '@questionnaireId'}},
-      readAllPerUser: {method: 'GET', params: {userId: '@userId'}, isArray: true}
+    return $resource(BACSURVEY_API + 'questionnaires/:action/:id', {}, {
+      create: {method: 'POST', params: {}},
+      update: {method: 'PUT', params: {}},
+      getQuestionnaire: {method: 'GET', params: {action: 'get', id: '@id'}},
+      readAllPerUser: {method: 'GET', params: {action: 'getAllPerUser', id: '@id'}, isArray: true}
     });
   })
   .factory('MetaPage', function ($resource, BACSURVEY_API) {
@@ -40,5 +40,15 @@ angular.module('bacsurveyApp')
       updateMultipleChoiceQuestion: {method: 'PUT', params: {action: 'updateMultipleChoiceQuestion'}},
       readAllPerPage: {method: 'GET', params: {action: 'readAllPerPage', pageId: '@pageId'}, isArray: true},
       delete: {method: 'DELETE', params: {action: 'delete', pageId: '@pageId'}}
+    });
+  })
+  .factory('Participant', function ($resource, BACSURVEY_API) {
+    return $resource(BACSURVEY_API + 'participants/:action/:id', {}, {
+      create: {method: 'POST', params: {action: 'newParticipant'}}
+    });
+  })
+  .factory('Answer', function ($resource, BACSURVEY_API) {
+    return $resource(BACSURVEY_API + 'answers/:action/:id', {}, {
+      create: {method: 'POST', params: {action: 'newAnswer'}}
     });
   });
