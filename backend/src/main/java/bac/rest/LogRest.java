@@ -25,6 +25,9 @@ public class LogRest extends EntityModelRest{
     @JsonProperty("participantId")
     private Long participantId;
 
+    @JsonProperty("duration")
+    private double duration;
+
     public Date getStartDate() {
         return startDate;
     }
@@ -71,5 +74,13 @@ public class LogRest extends EntityModelRest{
 
     public void setParticipantId(Long participantId) {
         this.participantId = participantId;
+    }
+
+    public double getDuration() {
+        return duration;
+    }
+
+    public void setDuration(double duration) {
+        this.duration = duration;
     }
 }

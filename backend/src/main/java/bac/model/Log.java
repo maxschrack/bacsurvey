@@ -39,6 +39,9 @@ public class Log extends bac.model.Entity{
     @JoinColumn(name = "participant_id", referencedColumnName = "id")
     private Participant participant;
 
+    @Column(name = "duration")
+    private double duration;
+
     public Long getId() {
         return id;
     }
@@ -93,5 +96,13 @@ public class Log extends bac.model.Entity{
 
     public void setParticipant(Participant participant) {
         this.participant = participant;
+    }
+
+    public double getDuration() {
+        return duration;
+    }
+
+    public void setDuration(double duration) {
+        this.duration = duration;
     }
 }

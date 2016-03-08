@@ -28,7 +28,6 @@
         <h2>{{vm.pages[vm.currentPage].title}}</h2>
       </div>
       <div class="panel-body">
-        {{vm.log}}
         <div>
           <uib-progressbar max="vm.pageCounter" value="vm.currentPage+1"><span style="color:white; white-space:nowrap;">{{vm.currentPage+1}} / {{vm.pageCounter}}</span></uib-progressbar>
         </div>
@@ -40,8 +39,8 @@
           <!-- OPEN QUESTION -->
           <div class="form-group" data-ng-show="question.type === 'oq'">
             <label>{{question.text}}</label>
-            <input type="text" class="form-control" data-ng-show="!question.isLong" data-ng-model="vm.answers[questionIndex].answer">
-            <textarea class="form-control" rows="3"  data-ng-show="question.isLong" data-ng-model="vm.answers[questionIndex].answer"></textarea>
+            <input type="text" class="form-control" data-ng-show="!question.isLong" data-ng-model="vm.answers[questionIndex].answer" ng-change="vm.logActivity(vm.answers[questionIndex], 'input_change');">
+            <textarea class="form-control" rows="3"  data-ng-show="question.isLong" data-ng-model="vm.answers[questionIndex].answer" ng-change="vm.logActivity(vm.answers[questionIndex], 'input_change');"></textarea>
             <br>
           </div>
 
@@ -51,8 +50,8 @@
             <div ng-repeat="answer in question.answers" style="margin-bottom: 0.2em;">
               <div class="{{vm.getTypeForMC(question);}}">
                 <label>
-                  <input type="{{vm.getTypeForMC(question);}}" value="{{answer.text}}" data-ng-model="vm.answers[questionIndex].answer" data-ng-show="question.isSingleChoice">
-                  <input type="{{vm.getTypeForMC(question);}}" value="{{answer.text}}" data-ng-model="vm.answers[questionIndex].mc[$index]" data-ng-show="!question.isSingleChoice">
+                  <input type="{{vm.getTypeForMC(question);}}" value="{{answer.text}}" data-ng-model="vm.answers[questionIndex].answer" data-ng-show="question.isSingleChoice" ng-change="vm.logActivity(vm.answers[questionIndex], 'mc_change');">
+                  <input type="{{vm.getTypeForMC(question);}}" value="{{answer.text}}" data-ng-model="vm.answers[questionIndex].mc[$index]" data-ng-show="!question.isSingleChoice" ng-change="vm.logActivity(vm.answers[questionIndex], 'mc_change');">
                   {{answer.text}}
                 </label>
               </div>

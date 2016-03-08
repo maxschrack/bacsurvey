@@ -21,6 +21,8 @@ public class LogDto extends EntityDto {
 
     private Long participantId;
 
+    private double duration;
+
     @Override
     public String getDisplayName() {
         return "log";
@@ -84,21 +86,11 @@ public class LogDto extends EntityDto {
         this.participantId = participantId;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public double getDuration() {
+        return duration;
+    }
 
-        LogDto logDto = (LogDto) o;
-
-        if (id != null ? !id.equals(logDto.id) : logDto.id != null) return false;
-        if (startDate != null ? !startDate.equals(logDto.startDate) : logDto.startDate != null) return false;
-        if (endDate != null ? !endDate.equals(logDto.endDate) : logDto.endDate != null) return false;
-        if (objectId != null ? !objectId.equals(logDto.objectId) : logDto.objectId != null) return false;
-        if (type != logDto.type) return false;
-        if (questionnaireId != null ? !questionnaireId.equals(logDto.questionnaireId) : logDto.questionnaireId != null)
-            return false;
-        return !(participantId != null ? !participantId.equals(logDto.participantId) : logDto.participantId != null);
-
+    public void setDuration(double duration) {
+        this.duration = duration;
     }
 }

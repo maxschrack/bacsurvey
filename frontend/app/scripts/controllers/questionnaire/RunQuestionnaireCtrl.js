@@ -7,7 +7,7 @@ angular.module('bacsurveyApp')
     vm.questionnaireId = $stateParams.questionnaireId;
 
     vm.getDate = function() {
-      return (new Date);
+      return (new Date).getTime();
     };
 
     // DEFINE VARIABLES
@@ -38,6 +38,9 @@ angular.module('bacsurveyApp')
     vm.log_question = {};
     vm.log_endPage = {};
 
+    vm.timer = {};
+    vm.lastLoggedAnswer = {"questionId": -1};
+
 
 
 
@@ -65,11 +68,11 @@ angular.module('bacsurveyApp')
           vm.participant = Participant.create({}, participant,
             function(){
               // CREATE LOG
-              vm.log_questionnaire =  Log.create({}, vm.getLogObject(vm.startPage.id, "questionnaire", vm.getDate(), null), function(){
+              vm.log_questionnaire =  Log.create({}, vm.getLogObject(vm.startPage.id, "questionnaire", vm.getDate(), null, null), function(){
               }, function(error){
                 ErrorHandler.show(error);
               });
-              vm.log_startPage =  Log.create({}, vm.getLogObject(vm.startPage.id, "startpage", vm.getDate(), null), function(){
+              vm.log_startPage =  Log.create({}, vm.getLogObject(vm.startPage.id, "startpage", vm.getDate(), null, null), function(){
               }, function(error){
                 ErrorHandler.show(error);
               });
@@ -91,14 +94,15 @@ angular.module('bacsurveyApp')
       ErrorHandler.show(error);
     });
 
-    vm.getLogObject = function(objectId, type, startDate, endDate){
+    vm.getLogObject = function(objectId, type, startDate, endDate, duration){
       var log = {
         "questionnaireId": vm.questionnaire.id,
         "participantId": vm.participant.id,
         "objectId": objectId,
         "type": type,
         "startDate": startDate,
-        "endDate": endDate};
+        "endDate": endDate,
+        "duration": duration};
       return log;
     }
 
@@ -111,39 +115,48 @@ angular.module('bacsurveyApp')
       if(vm.currentPage != -1){
         // no questions at startPage
         vm.log_page.endDate = vm.getDate();
+        vm.log_page.duration = vm.dateDiff(vm.log_page.startDate, vm.log_page.endDate)
         vm.log_page = Log.update({}, vm.log_page, function(){
         }, function(error){
           ErrorHandler.show(error);
         });
         vm.answers.forEach(function (a) {
-          if(a.type == 'oq' || (a.type == 'mc' && !a.hasOwnProperty('mc'))){
-            vm.createAnswer(a);
-          }else if(a.type == 'mc' && a.mc.length != 0){
-            var falseCounter = 0;
-            var index = 0;
+          vm.logXXX = Log.create({}, vm.getLogObject(a.questionId, "question", a.log_start, a.log_end, a.duration), function() {
+            if (a.type == 'oq' || (a.type == 'mc' && !a.hasOwnProperty('mc'))) {
+              vm.createAnswer(a);
+            } else if (a.type == 'mc' && a.mc.length != 0) {
+              var falseCounter = 0;
+              var index = 0;
 
-            // Save each selected Checkbox as new answer
-            a.mc.forEach(function (mcAnswer){
-              if(mcAnswer){
-                vm.testAnswer.push({"participantId": a.participantId, "questionId":a.questionId, "answer": a.answerText[index]});
-              }else{
-                falseCounter = falseCounter + 1;
+              // Save each selected Checkbox as new answer
+              a.mc.forEach(function (mcAnswer) {
+                if (mcAnswer) {
+                  vm.testAnswer.push({
+                    "participantId": a.participantId,
+                    "questionId": a.questionId,
+                    "answer": a.answerText[index]
+                  });
+                } else {
+                  falseCounter = falseCounter + 1;
+                }
+                index = index + 1;
+              });
+
+              // Create answer for each checkbox
+              vm.testAnswer.forEach(function (a) {
+                vm.createAnswer(a);
+              });
+
+              // save empty answer if participant has not chosen one
+              if (falseCounter == a.mc.length) {
+                a.answer = '';
+                vm.createAnswer(a);
               }
-              index = index + 1;
-            });
-
-            // Create answer for each checkbox
-            vm.testAnswer.forEach(function (a){
-              vm.createAnswer(a);
-            });
-
-            // save empty answer if participant has not chosen one
-            if(falseCounter == a.mc.length){
-              a.answer = '';
-              vm.createAnswer(a);
+              vm.testAnswer = [];
             }
-            vm.testAnswer = [];
-          }
+          }, function(error){
+            ErrorHandler.show(error);
+          });
         });
       }
 
@@ -157,8 +170,9 @@ angular.module('bacsurveyApp')
             vm.questions.forEach(function (question) {
               vm.answers.push(vm.generateAnswer(question));
             });
-            vm.log_page = Log.create({}, vm.getLogObject(vm.pages[vm.currentPage].id, "page", vm.getDate(), null), function(){
+            vm.log_page = Log.create({}, vm.getLogObject(vm.pages[vm.currentPage].id, "page", vm.getDate(), null, null), function(){
               vm.showPage = true;
+              vm.timer = vm.getDate();
             }, function(error){
               ErrorHandler.show(error);
             });
@@ -169,11 +183,12 @@ angular.module('bacsurveyApp')
         // Questionnaire finished -> display endPage
         vm.showEndPage = true;
         vm.showPage = false;
-        vm.log_endPage = Log.create({}, vm.getLogObject(vm.endPage.id, "endpage", vm.getDate(), null), function(){
+        vm.log_endPage = Log.create({}, vm.getLogObject(vm.endPage.id, "endpage", vm.getDate(), null, null), function(){
         }, function(error){
           ErrorHandler.show(error);
         });
         vm.log_questionnaire.endDate = vm.getDate();
+        vm.log_questionnaire.duration = vm.dateDiff(vm.log_questionnaire.startDate, vm.log_questionnaire.endDate)
         vm.log_questionnaire = Log.update({}, vm.log_questionnaire, function(){
         }, function(error){
           ErrorHandler.show(error);
@@ -205,6 +220,7 @@ angular.module('bacsurveyApp')
           if (!angular.equals({}, vm.startPage)) {
             vm.hasStartPage = true;
             vm.showStartPage = true;
+            vm.timer = vm.getDate();
           }
         }, function (error) {
           ErrorHandler.show(error);
@@ -265,12 +281,44 @@ angular.module('bacsurveyApp')
       vm.showStartPage = false;
       // LOG END OF START PAGE
       vm.log_startPage.endDate = vm.getDate();
+      vm.log_startPage.duration = vm.dateDiff(vm.log_startPage.startDate, vm.log_startPage.endDate)
       vm.log_startPage = Log.update({}, vm.log_startPage, function(){
         // GET QUESTIONS OF FIRST PAGE
         vm.nextPage();
       }, function(error){
         ErrorHandler.show(error);
       });
+    }
+
+    /**
+     * LOG TIME PER QUESTION
+     * @param answer
+     * @param changeType
+     */
+    vm.logActivity = function(answer, changeType){
+      if(vm.lastLoggedAnswer.questionId == answer.questionId){
+        answer.duration = answer.duration + vm.dateDiff(vm.lastLoggedAnswer.log_end, vm.getDate());
+        answer.log_end = vm.getDate();
+        vm.lastLoggedAnswer = answer;
+      }else{
+        // first question of the page
+        if(vm.lastLoggedAnswer.questionId == -1){
+          answer.duration = vm.dateDiff(vm.timer, vm.getDate());
+          answer.log_start = vm.timer;
+          answer.log_end = vm.getDate();
+          vm.lastLoggedAnswer = answer;
+        }else if (answer.log_start == ''){
+          answer.duration = vm.dateDiff(vm.lastLoggedAnswer.log_end, vm.getDate());
+          answer.log_start = vm.lastLoggedAnswer.log_end;
+          answer.log_end = vm.getDate();
+        }else{
+          // participant has worked on the answer for the given question before
+          answer.duration = answer.duration + vm.dateDiff(vm.lastLoggedAnswer.log_end, vm.getDate());
+          answer.log_end = vm.getDate();
+          vm.lastLoggedAnswer = answer;
+        }
+      }
+      vm.lastLoggedAnswer = answer;
     }
 
     // HELPER METHODS FOR UI
@@ -281,7 +329,7 @@ angular.module('bacsurveyApp')
      * @returns answer object
      */
     vm.generateAnswer = function(question){
-      var answer = {"participantId": vm.participant.id, "questionId": question.id, "answer": '', "type": question.type};
+      var answer = {"participantId": vm.participant.id, "questionId": question.id, "answer": '', "type": question.type, "duration": '', "log_start": '', "log_end": ''};
       if(question.type == 'mc' && question.isSingleChoice == false){
         answer.mc = [];
         answer.answerText = [];
@@ -293,6 +341,17 @@ angular.module('bacsurveyApp')
       }
       return answer;
     };
+
+    /**
+     * CALCULATE DIFFERENCE BETWEEN TWO TIMESTAMPS
+     * @param start
+     * @param end
+     * @returns {number}
+     */
+    vm.dateDiff = function(start, end){
+      var timeDiff = Math.abs(end - start);
+      return (timeDiff / (1000));
+    }
 
     /**
      * Return radio or checkbox
