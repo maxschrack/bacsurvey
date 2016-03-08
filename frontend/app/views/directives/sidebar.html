@@ -5,14 +5,25 @@
               <a data-ng-click="showHome()"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
             </li>
             <li>
-                <a data-ng-click="showQuestionnaires()"><i class="fa fa-users"></i>Questionnaires</a>
+                <a data-ng-click="showQuestionnaires()"><i class="fa fa-users"></i> Questionnaires</a>
             </li>
             <li>
-                <a data-ng-click="showParticipants()"><i class="fa fa-university "></i>Participants</a>
+                <a data-ng-click="showParticipants()"><i class="fa fa-university "></i> Participants</a>
             </li>
-            <li>
-                <a data-ng-click="showAnalysis()"><i class="fa fa-comments-o "></i>Analysis</a>
-            </li>
+            <li class="active">
+              <a data-ng-class="{'collapsed':collapseAnalysis}" data-ng-click="collapseAnalysis = !collapseAnalysis" data-target="#sub2">
+              <i class="glyphicon glyphicon-list-alt"></i> Analysis
+              <span class="fa" data-ng-class="{'fa-caret-up' : collapseAnalysis, 'fa-caret-down': !collapseAnalysis}"></span>
+            </a>
+            <ul class="nav collapse nav-second-level" data-ng-class="{'in': !collapseAnalysis}" id="sub2">
+                <li>
+                  <a data-ng-click="showResponseAnalysis()">Responses</a>
+                </li>
+                <li>
+                  <a data-ng-click="showResponseAnalysis()">Answers</a>
+                </li>
+            </ul>
+          </li>
         </ul>
     </div>
     <!-- /.sidebar-collapse -->

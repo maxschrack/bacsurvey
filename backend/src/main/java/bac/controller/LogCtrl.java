@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping("/questionnaires/{questionnaireId}/logs")
+@RequestMapping("/logs/")
 @Api(value = "/logs", description = "Log Administration")
 public class LogCtrl {
 
@@ -38,9 +38,9 @@ public class LogCtrl {
     }
 
     // CREATE
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST, value="/newLog")
     @ApiOperation(value = "Create new Log", notes = "")
-    public ResponseEntity<LogRest> create(@PathVariable Long questionnaireId, @RequestBody LogRest log, UriComponentsBuilder builder) throws ServiceException, InstantiationException, IllegalAccessException, HttpRequestMethodNotSupportedException {
+    public ResponseEntity<LogRest> create(@RequestBody LogRest log, UriComponentsBuilder builder) throws ServiceException, InstantiationException, IllegalAccessException, HttpRequestMethodNotSupportedException {
         if (logService == null)
             throw new HttpRequestMethodNotSupportedException("POST");
 
@@ -52,10 +52,27 @@ public class LogCtrl {
         return new ResponseEntity<>(newLog, headers, HttpStatus.CREATED);
     }
 
+    // UPDATE
+    @RequestMapping(method = RequestMethod.PUT, value = "/updateLog")
+    @ApiOperation(value = "Update a Log", notes = "")
+    public ResponseEntity<LogRest> update(@RequestBody LogRest log, UriComponentsBuilder builder) throws ServiceException, InstantiationException, IllegalAccessException, HttpRequestMethodNotSupportedException {
+        if (logService == null)
+            throw new HttpRequestMethodNotSupportedException("PUT");
+
+        LogDto toUpdate = DtoFactory.toDto(log);
+        toUpdate.setId(log.getSelfId());
+        LogDto response = logService.update(toUpdate);
+        LogRest updatedPage = ModelFactory.log(response);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return new ResponseEntity<>(updatedPage, headers, HttpStatus.OK);
+    }
+
     // READ ALL PER Questionnaire
-    @RequestMapping(method = RequestMethod.GET, value = "/{objectId}/{type}")
+    @RequestMapping(method = RequestMethod.GET, value = "/getAllPerObject/{objectId}/{type}")
     @ApiOperation(value = "Retrieve all Logs per ObjectType", notes = "")
-    public ResponseEntity<List<LogRest>> readAllLogsPerQuestion(@PathVariable Long questionnaireId, @PathVariable Long objectId, @PathVariable ELogType type) throws ServiceException, HttpRequestMethodNotSupportedException {
+    public ResponseEntity<List<LogRest>> readAllLogsPerQuestion(@PathVariable Long objectId, @PathVariable ELogType type) throws ServiceException, HttpRequestMethodNotSupportedException {
         if (logService == null)
             throw new HttpRequestMethodNotSupportedException("GET");
 

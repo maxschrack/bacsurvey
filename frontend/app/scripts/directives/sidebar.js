@@ -6,6 +6,8 @@ angular.module('bacsurveyApp')
             restrict: 'E',
             link: function (vm) {
 
+                vm.collapseAnalysis = false;
+
                 vm.showHome = function () {
                     $location.path('/dashboard');
                 };
@@ -18,8 +20,8 @@ angular.module('bacsurveyApp')
                     $location.path('/userAdmin');
                 };
 
-                vm.showAnalysis = function () {
-                    $location.path('/universityAdmin');
+                vm.showResponseAnalysis = function () {
+                  $state.go('responseAnalysis', {'questionnaireId': 1});
                 };
             }
         };

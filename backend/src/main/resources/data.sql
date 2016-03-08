@@ -60,3 +60,12 @@ INSERT INTO participant(id, questionnaire_id, email, password, ip_address, creat
 VALUES(nextval('seq_participant_id'), 1, 'participant1@test.com', 'xxx', '127.0.0.1', '2016-2-14 12:00:00.00', false);
 INSERT INTO participant(id, questionnaire_id, email, password, ip_address, creation_date, deleted)
 VALUES(nextval('seq_participant_id'), 1, 'participant2@test.com', 'xxx', '128.0.0.1', '2016-2-24 18:00:00.00', false);
+
+
+
+
+SELECT AVG(((DATE_PART('day', l.end_date - l.start_date) * 24 +
+            DATE_PART('hour', l.end_date - start_date)) * 60 +
+            DATE_PART('minute', l.end_date - start_date)) * 60 +
+            DATE_PART('second', l.end_date - start_date))
+            FROM Log l WHERE l.end_date IS NOT NULL AND l.object_id= 1 AND l.type ='startpage';

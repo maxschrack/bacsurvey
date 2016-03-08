@@ -67,5 +67,11 @@ angular
         templateUrl: 'views/questionnaire/run-questionnaire.html',
         controller: 'RunQuestionnaireCtrl',
         controllerAs: 'vm'
+      })
+      .state('responseAnalysis', {
+        url: '/responseAnalysis/:questionnaireId',
+        templateUrl: 'views/analysis/response-analysis.html',
+        controller: 'ResponseAnalysisCtrl',
+        controllerAs: 'vm'
       });
   });

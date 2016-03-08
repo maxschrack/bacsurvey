@@ -28,7 +28,7 @@
         <h2>{{vm.pages[vm.currentPage].title}}</h2>
       </div>
       <div class="panel-body">
-
+        {{vm.log}}
         <div>
           <uib-progressbar max="vm.pageCounter" value="vm.currentPage+1"><span style="color:white; white-space:nowrap;">{{vm.currentPage+1}} / {{vm.pageCounter}}</span></uib-progressbar>
         </div>

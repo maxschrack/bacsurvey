@@ -1,10 +1,14 @@
 angular.module('bacsurveyApp')
 
-  .controller('RunQuestionnaireCtrl', function ($window, $http, $stateParams, $log, ErrorHandler, Questionnaire, MetaPage, Page, Question, Participant, Answer, NotificationHandler, ngDialog) {
+  .controller('RunQuestionnaireCtrl', function ($window, $http, $stateParams, $log, ErrorHandler, Questionnaire, MetaPage, Page, Question, Participant, Answer, Log,  NotificationHandler, ngDialog) {
 
     var vm = this;
 
     vm.questionnaireId = $stateParams.questionnaireId;
+
+    vm.getDate = function() {
+      return (new Date);
+    };
 
     // DEFINE VARIABLES
     vm.questionnaire = {};
@@ -27,6 +31,15 @@ angular.module('bacsurveyApp')
     vm.pageCounter = 0;
     vm.currentPage = -1;
 
+    // Time Logging
+    vm.log_questionnaire = {};
+    vm.log_startPage = {};
+    vm.log_page = {};
+    vm.log_question = {};
+    vm.log_endPage = {};
+
+
+
 
     vm.questionnaire = Questionnaire.getQuestionnaire({'id': vm.questionnaireId}, function () {
 
@@ -39,19 +52,69 @@ angular.module('bacsurveyApp')
       // GET PAGES
       vm.getPages(vm.questionnaire);
 
-      vm.createParticipant(vm.questionnaire);
+      // GET START PAGE
+      if (vm.questionnaire.startPageId != null) {
+        vm.startPage = MetaPage.getStartPage({'questionnaireId': vm.questionnaire.id
+        }, function () {
+          // CREATE PARTICIPANT
+          var participant = {};
+          participant.email = "test@test.com";
+          participant.ipAddress = "127.0.0.1";
+          participant.password = "test_pw";
+          participant.questionnaireId = vm.questionnaire.id;
+          vm.participant = Participant.create({}, participant,
+            function(){
+              // CREATE LOG
+              vm.log_questionnaire =  Log.create({}, vm.getLogObject(vm.startPage.id, "questionnaire", vm.getDate(), null), function(){
+              }, function(error){
+                ErrorHandler.show(error);
+              });
+              vm.log_startPage =  Log.create({}, vm.getLogObject(vm.startPage.id, "startpage", vm.getDate(), null), function(){
+              }, function(error){
+                ErrorHandler.show(error);
+              });
+          }, function(error){
+            ErrorHandler.show(error);
+          });
 
-    }, function(error){
+          // CHECK IF START PAGE IS NOT EMPTY
+          if (!angular.equals({}, vm.startPage)) {
+            vm.hasStartPage = true;
+            vm.showStartPage = true;
+          }
+        }, function (error) {
+          ErrorHandler.show(error);
+        });
+      }
+
+     }, function(error){
       ErrorHandler.show(error);
     });
+
+    vm.getLogObject = function(objectId, type, startDate, endDate){
+      var log = {
+        "questionnaireId": vm.questionnaire.id,
+        "participantId": vm.participant.id,
+        "objectId": objectId,
+        "type": type,
+        "startDate": startDate,
+        "endDate": endDate};
+      return log;
+    }
 
     /**
      * GET ALL QUESTIONS PER PAGE
      */
     vm.nextPage = function(){
+
       // SEND ANSWERS
       if(vm.currentPage != -1){
         // no questions at startPage
+        vm.log_page.endDate = vm.getDate();
+        vm.log_page = Log.update({}, vm.log_page, function(){
+        }, function(error){
+          ErrorHandler.show(error);
+        });
         vm.answers.forEach(function (a) {
           if(a.type == 'oq' || (a.type == 'mc' && !a.hasOwnProperty('mc'))){
             vm.createAnswer(a);
@@ -94,7 +157,11 @@ angular.module('bacsurveyApp')
             vm.questions.forEach(function (question) {
               vm.answers.push(vm.generateAnswer(question));
             });
-            vm.showPage = true;
+            vm.log_page = Log.create({}, vm.getLogObject(vm.pages[vm.currentPage].id, "page", vm.getDate(), null), function(){
+              vm.showPage = true;
+            }, function(error){
+              ErrorHandler.show(error);
+            });
           }, function (error) {
             ErrorHandler.show(error);
           });
@@ -102,6 +169,15 @@ angular.module('bacsurveyApp')
         // Questionnaire finished -> display endPage
         vm.showEndPage = true;
         vm.showPage = false;
+        vm.log_endPage = Log.create({}, vm.getLogObject(vm.endPage.id, "endpage", vm.getDate(), null), function(){
+        }, function(error){
+          ErrorHandler.show(error);
+        });
+        vm.log_questionnaire.endDate = vm.getDate();
+        vm.log_questionnaire = Log.update({}, vm.log_questionnaire, function(){
+        }, function(error){
+          ErrorHandler.show(error);
+        });
       }
     };
 
@@ -187,7 +263,14 @@ angular.module('bacsurveyApp')
      */
     vm.startQuestionnaire = function(){
       vm.showStartPage = false;
-      vm.nextPage();
+      // LOG END OF START PAGE
+      vm.log_startPage.endDate = vm.getDate();
+      vm.log_startPage = Log.update({}, vm.log_startPage, function(){
+        // GET QUESTIONS OF FIRST PAGE
+        vm.nextPage();
+      }, function(error){
+        ErrorHandler.show(error);
+      });
     }
 
     // HELPER METHODS FOR UI
