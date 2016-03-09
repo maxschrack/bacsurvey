@@ -18,8 +18,8 @@ INSERT INTO page(id, questionnaire_id, title, text, number, deleted)
 VALUES(nextval('seq_page_id'), 1, 'Page 1 of Questionnaire 1', 'Test Text for Page 1 of Questionnaire 1', 0,false);
 INSERT INTO page(id, questionnaire_id, title, text, number, deleted)
 VALUES(nextval('seq_page_id'), 1, 'Page 2 of Questionnaire 1', 'Test Text for Page 2 of Questionnaire 1', 1, false);
-INSERT INTO page(id, questionnaire_id, title, text, number, deleted)
-VALUES(nextval('seq_page_id'), 1, 'Page 3 of Questionnaire 1', 'Test Text for Page 3 of Questionnaire 1', 2, false);
+--INSERT INTO page(id, questionnaire_id, title, text, number, deleted)
+--VALUES(nextval('seq_page_id'), 1, 'Page 3 of Questionnaire 1', 'Test Text for Page 3 of Questionnaire 1', 2, false);
 
 INSERT INTO meta_page(id, title, text, questionnaire_id, deleted)
 VALUES(nextval('seq_metapage_id'),'Welcome', 'This is my first questionnaire!', 1, false);
@@ -53,6 +53,31 @@ UPDATE questionnaire SET start_page = 1, end_page = 2 WHERE id = 1;
     VALUES(nextval('seq_multiple_choice_answer_id'), 3, 'A3 of MC 3');
     INSERT INTO multiple_choice_answer(id, multiple_choice_id, text)
     VALUES(nextval('seq_multiple_choice_answer_id'), 3, 'A4 of MC 3');
+
+-- QUESTIONS FOR PAGE 2
+  -- MULTIPLE CHOICE QUESTION 3
+  INSERT INTO question(id, page_id, text, mandatory, position, question_type, deleted)
+  VALUES(nextval('seq_question_id'), 2, 'MC: Question 1 of Page 2', false, 0, 'MC', false);
+  INSERT INTO multiple_choice(id, is_single_choice)
+  VALUES(4, true);
+    -- ANSWER OF QUESTION 3
+    INSERT INTO multiple_choice_answer(id, multiple_choice_id, text)
+    VALUES(nextval('seq_multiple_choice_answer_id'), 4, 'B1 of SC');
+    INSERT INTO multiple_choice_answer(id, multiple_choice_id, text)
+    VALUES(nextval('seq_multiple_choice_answer_id'), 4, 'B2 of SC');
+    INSERT INTO multiple_choice_answer(id, multiple_choice_id, text)
+    VALUES(nextval('seq_multiple_choice_answer_id'), 4, 'B3 of SC');
+
+  -- OPEN QUESTION 1
+  INSERT INTO question(id, page_id, text, mandatory, position, question_type, deleted)
+  VALUES(nextval('seq_question_id'), 2, 'OQ: Question 2 of Page 2', true, 0, 'OQ', false);
+  INSERT INTO open_question(id, validation_type, is_long)
+  VALUES(5, 'none', false);
+  -- OPEN QUESTION 2
+  INSERT INTO question(id, page_id, text, mandatory, position, question_type, deleted)
+  VALUES(nextval('seq_question_id'), 2, 'OQ: Question 3 of Page 2', false, 0, 'OQ', false);
+  INSERT INTO open_question(id, validation_type, is_long)
+  VALUES(6, 'none', true);
 
 
 -- PARTICIPANTS

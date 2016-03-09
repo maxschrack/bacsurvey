@@ -47,7 +47,7 @@ public class AnswerCtrl {
         return new ResponseEntity<>(newAnswer, headers, HttpStatus.CREATED);
     }
 
-    // READ ALL PER Questionnaire
+    /*// READ ALL PER Questionnaire
     @RequestMapping(method = RequestMethod.GET, value="/getAllPerQuestion/{questionId}")
     @ApiOperation(value = "Retrieve all Answers per Question", notes = "")
     public ResponseEntity<List<AnswerRest>> readAllAnswersPerQuestion(@PathVariable Long questionId) throws ServiceException, HttpRequestMethodNotSupportedException {
@@ -64,7 +64,7 @@ public class AnswerCtrl {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<>(answers, headers, HttpStatus.OK);
-    }
+    }*/
 
     // READ ALL PER Questionnaire
     @RequestMapping(method = RequestMethod.GET, value="/getAllPerParticipant/{participantId}")

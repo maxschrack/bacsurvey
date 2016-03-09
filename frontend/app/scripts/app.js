@@ -73,5 +73,11 @@ angular
         templateUrl: 'views/analysis/response-analysis.html',
         controller: 'ResponseAnalysisCtrl',
         controllerAs: 'vm'
+      })
+      .state('answerAnalysis', {
+        url: '/answerAnalysis/:questionnaireId',
+        templateUrl: 'views/analysis/answer-analysis.html',
+        controller: 'AnswerAnalysisCtrl',
+        controllerAs: 'vm'
       });
   });

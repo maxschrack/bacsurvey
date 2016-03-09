@@ -1,7 +1,9 @@
 package bac.controller;
 
+import bac.dto.QuestionDto;
 import bac.dto.QuestionnaireDto;
 import bac.exception.ServiceException;
+import bac.rest.analysis.AnalyzeAnswerRest;
 import bac.rest.analysis.AnalyzeResponseRest;
 import bac.service.AnalysisService;
 import io.swagger.annotations.Api;
@@ -37,6 +39,20 @@ public class AnalysisCtrl {
             throw new HttpRequestMethodNotSupportedException("GET");
 
         AnalyzeResponseRest response = analysisService.getVisitsAndTimePerPage(new QuestionnaireDto(id));
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return new ResponseEntity<>(response, headers, HttpStatus.OK);
+    }
+
+    // READ ALL ANSWER PER Questionnaire
+    @RequestMapping(method = RequestMethod.GET, value = "/getAnswerAnalysis/{id}")
+    @ApiOperation(value = "Retrieve Answer Analysis", notes = "")
+    public ResponseEntity<AnalyzeAnswerRest> getAnswerAnalysis(@PathVariable Long id) throws ServiceException, HttpRequestMethodNotSupportedException {
+        if (analysisService == null)
+            throw new HttpRequestMethodNotSupportedException("GET");
+
+        AnalyzeAnswerRest response = analysisService.getAllAnswersPerQuestion(id);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

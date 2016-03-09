@@ -4,8 +4,6 @@ package bac.service.impl;
 import bac.converter.AnswerConverter;
 import bac.dto.AnswerDto;
 import bac.dto.DtoList;
-import bac.dto.ParticipantDto;
-import bac.dto.QuestionDto;
 import bac.exception.ServiceException;
 import bac.model.Answer;
 import bac.model.Participant;
@@ -93,9 +91,7 @@ public class AnswerServiceImpl implements AnswerService{
         // validate
 
         //
-        Question finder = new Question();
-        finder.setId(questionId);
-        List<Answer> result = answerRepository.findByQuestion(finder);
+        List<Answer> result = answerRepository.getAnswersNotNullPerQuestion(questionId);
 
         // convert and return
         return answerConverter.toDtoList(result);

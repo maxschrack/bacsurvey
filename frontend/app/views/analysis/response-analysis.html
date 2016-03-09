@@ -7,7 +7,6 @@
 <!-- /.row -->
 <div class="row">
   <div class="col-lg-8">
-
     <div class="panel panel-info">
       <div class="panel-heading">
         <h4>Visits per Page</h4>
@@ -30,11 +29,45 @@
 
     <div class="panel panel-info">
       <div class="panel-heading">
-        <h4>Response / Non Responses per Question</h4>
+        <h4>Average Time per Question</h4>
       </div>
       <div class="panel-body">
+        <div id="avgTimePerQuestion" style="height: 250px;"></div>
 
+        <uib-accordion>
+          <uib-accordion-group is-open="status.open" >
+            <uib-accordion-heading>Questions
+              <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+            </uib-accordion-heading>
+            <div>
+              <div ng-repeat="question in vm.responseAnalysis.questionResponses">
+                <label>Q {{$index + 1}}: </label> {{question.text}}
+              </div>
+            </div>
+          </uib-accordion-group>
+        </uib-accordion>
+      </div>
+    </div>
+
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <h4>Response / Non Response per Question</h4>
+      </div>
+      <div class="panel-body">
         <div id="nonResponsePerQuestion" style="height: 250px;"></div>
+
+        <uib-accordion>
+          <uib-accordion-group is-open="status.open" >
+            <uib-accordion-heading>Questions
+              <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+            </uib-accordion-heading>
+            <div>
+              <div ng-repeat="question in vm.responseAnalysis.questionResponses">
+                <label>Q {{$index + 1}}: </label> {{question.text}}
+              </div>
+            </div>
+          </uib-accordion-group>
+        </uib-accordion>
       </div>
     </div>
 

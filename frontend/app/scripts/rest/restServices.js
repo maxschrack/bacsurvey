@@ -49,7 +49,8 @@ angular.module('bacsurveyApp')
   })
   .factory('Answer', function ($resource, BACSURVEY_API) {
     return $resource(BACSURVEY_API + 'answers/:action/:id', {}, {
-      create: {method: 'POST', params: {action: 'newAnswer'}}
+      create: {method: 'POST', params: {action: 'newAnswer'}},
+      getAllPerQuestion: {method: 'GET', params: {action: 'getAllPerQuestion', id: '@id'}, isArray: true}
     });
   })
   .factory('Log', function ($resource, BACSURVEY_API) {
@@ -61,6 +62,7 @@ angular.module('bacsurveyApp')
   })
   .factory('Analysis', function ($resource, BACSURVEY_API) {
     return $resource(BACSURVEY_API + 'analysis/:action/:id', {}, {
-      getResponseAnalysis: {method: 'GET', params: {action: 'getResponseAnalysis', id: '@id'}}
+      getResponseAnalysis: {method: 'GET', params: {action: 'getResponseAnalysis', id: '@id'}},
+      getAnswerAnalysis: {method: 'GET', params: {action: 'getAnswerAnalysis', id: '@id'}}
     });
   });

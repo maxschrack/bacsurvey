@@ -1,20 +1,18 @@
 package bac.service.impl;
 
 import bac.converter.AnswerConverter;
-import bac.dto.QuestionDto;
 import bac.dto.QuestionnaireDto;
 import bac.exception.ServiceException;
-import bac.model.Page;
-import bac.model.Question;
-import bac.model.Questionnaire;
+import bac.model.*;
 import bac.model.enums.ELogType;
+import bac.model.enums.EQuestionType;
 import bac.repository.*;
-import bac.rest.analysis.AnalyzeResponseRest;
-import bac.rest.analysis.ResponseStatisticRest;
+import bac.rest.analysis.*;
 import bac.service.AnalysisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,6 +66,7 @@ public class AnalysisServiceImpl implements AnalysisService{
             restResponse.setCounterNonResponse(answerRepository.countNonResponsesPerQuestion(q.getId()));
             restResponse.setCounterResponse(answerRepository.countResponsesPerQuestion(q.getId()));
             response.getQuestionResponses().add(restResponse);
+            response.getAvgTime_question().add(logRepository.getAvgTimePerObject(q.getId(), ELogType.question.toString()));
         }
     }
 
@@ -76,11 +75,11 @@ public class AnalysisServiceImpl implements AnalysisService{
         response.setStartPageVisits(logRepository.getVisitsPerPage(questionnaire.getStartPage().getId(), ELogType.startpage));
 
 
-        Integer avgVisitTime_startPage = logRepository.getTimePerPage(questionnaire.getStartPage().getId(), ELogType.startpage.toString());
+        Double avgVisitTime_startPage = logRepository.getAvgTimePerObject(questionnaire.getStartPage().getId(), ELogType.startpage.toString());
         if(avgVisitTime_startPage != null)
             response.setAvgVisitTime_startPage(avgVisitTime_startPage);
         else
-            response.setAvgVisitTime_startPage(0);
+            response.setAvgVisitTime_startPage(0.0);
 
         // Get Visits per Page
         //ArrayList<Long> visits_pages = new ArrayList<>();
@@ -88,11 +87,11 @@ public class AnalysisServiceImpl implements AnalysisService{
         for(Page page : questionnaire.getPages()){
             response.getPageVisits().add(logRepository.getVisitsPerPage(page.getId(), ELogType.page));
 
-            Integer temp = logRepository.getTimePerPage(page.getId(), ELogType.page.toString());
+            Double temp = logRepository.getAvgTimePerObject(page.getId(), ELogType.page.toString());
             if(temp != null)
                 response.getAvgVisitTime_pages().add(temp);
             else
-                response.getAvgVisitTime_pages().add(0);
+                response.getAvgVisitTime_pages().add(0.0);
         }
 
         // Get Visits and Time Per End Page
@@ -100,13 +99,47 @@ public class AnalysisServiceImpl implements AnalysisService{
 
     }
 
-    @Override
+
     public void getResponsesPerQuestion(QuestionnaireDto dto) throws ServiceException {
 
     }
 
     @Override
-    public void getAllAnswersPerQuestion(QuestionDto dto) throws ServiceException {
+    public AnalyzeAnswerRest getAllAnswersPerQuestion(Long id) throws ServiceException {
 
+        Question question = questionRepository.findOne(id);
+
+        if(question instanceof OpenQuestion){
+            AnalyzeOpenQuestionRest rest = new AnalyzeOpenQuestionRest();
+            rest.setType(EQuestionType.oq);
+
+            List<Answer> temp = answerRepository.getAnswersNotNullPerQuestion(question.getId());
+            for(Answer answer : temp){
+                rest.getAnswers().add(answer.getAnswer());
+            }
+            return rest;
+        }else if(question instanceof MultipleChoice){
+            AnalyzeMultipleChoiceRest rest = new AnalyzeMultipleChoiceRest();
+            rest.setType(EQuestionType.mc);
+            for(MultipleChoiceAnswer answer : ((MultipleChoice) question).getAnswers()){
+                AnswerCounterRest ac = new AnswerCounterRest();
+
+                Long counter = answerRepository.getAnswerCounter(question.getId(), answer.getText());
+
+                ac.setAnswer(answer.getText());
+                ac.setCounter(counter);
+
+                rest.getAnswers().add(ac);
+            }
+            // Search for empty answers
+            AnswerCounterRest ac = new AnswerCounterRest();
+            Long counter = answerRepository.getAnswerCounter(question.getId(), "");
+            ac.setAnswer("");
+            ac.setCounter(counter);
+            rest.getAnswers().add(ac);
+
+            return rest;
+        }
+        return null;
     }
 }

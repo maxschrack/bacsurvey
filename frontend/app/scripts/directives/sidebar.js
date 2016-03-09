@@ -23,6 +23,10 @@ angular.module('bacsurveyApp')
                 vm.showResponseAnalysis = function () {
                   $state.go('responseAnalysis', {'questionnaireId': 1});
                 };
+
+                vm.showAnswerAnalysis = function () {
+                  $state.go('answerAnalysis', {'questionnaireId': 1});
+                };
             }
         };
     });

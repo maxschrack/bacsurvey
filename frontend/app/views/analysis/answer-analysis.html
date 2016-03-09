@@ -1,0 +1,49 @@
+<div class="row">
+  <div class="col-lg-12">
+    <h2 class="page-header">Analyze Answers of <i>{{vm.questionnaire.name}}</i></h2>
+  </div>
+  <!-- /.col-lg-12 -->
+</div>
+<!-- /.row -->
+<div class="row">
+  <div class="col-lg-8">
+
+    <!-- LIST OF ALL PAGES -->
+    <div class="panel panel-info" ng-repeat="page in vm.pages" >
+      <div class="panel-heading">
+        <h4>Page {{$index + 1}}</h4>
+      </div>
+      <div class="panel-body">
+
+        <!-- LIST OF ALL QUESTIONS PER PAGE -->
+        <div class="panel panel-warning" ng-repeat="question in page.questions" >
+          <div class="panel-heading">
+            <h4>Q {{$index + 1}}: {{question.text}}</h4>
+          </div>
+          <div class="panel-body">
+            <div data-ng-show="question.type == 'mc'">
+              <div id="questionChart_{{page.id}}_{{question.id}}" style="height: 250px;"></div>
+              <uib-accordion>
+                <uib-accordion-group is-open="status.open" >
+                  <uib-accordion-heading>Answers
+                    <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+                  </uib-accordion-heading>
+                  <div>
+                    <div ng-repeat="answer in question.answers">
+                      <label>A{{$index + 1}}: </label> {{answer.text}}
+                    </div>
+                  </div>
+                </uib-accordion-group>
+              </uib-accordion>
+            </div>
+            <div data-ng-show="question.type == 'oq'">
+              <div class="well" ng-repeat="answer in question.oq_answers">
+                {{answer}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
