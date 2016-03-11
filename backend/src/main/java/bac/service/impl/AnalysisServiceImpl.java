@@ -34,6 +34,8 @@ public class AnalysisServiceImpl implements AnalysisService{
     @Autowired
     private AnswerConverter answerConverter;
 
+    private static final String delimter = "||";
+
     @Override
     public AnalyzeResponseRest getVisitsAndTimePerPage(QuestionnaireDto dto) throws ServiceException {
 
@@ -147,32 +149,86 @@ public class AnalysisServiceImpl implements AnalysisService{
 
     @Override
     public void generateResponseReport(Long questionnaireId) {
+        try
+        {
+            FileWriter writer = new FileWriter("backend/exports/questionnaire_"+questionnaireId+"_responseReport.csv");
 
-        FileWriter writer = null;
+            List<Log> list = logRepository.findByQuestionnaire(new Questionnaire(questionnaireId));
 
-        try {
-            writer = new FileWriter("test.csv");
+            // Key
+            writer.append("Participant ID"+delimter+
+                    "Start Date"+delimter+
+                    "End Date"+delimter+
+                    "Duration"+delimter+
+                    "Type"+delimter+
+                    "Object ID"+
+                    "\n");
 
-            writer.append("DisplayName");
-            writer.append(',');
-            writer.append("Age");
-            writer.append('\n');
+            for(Log log : list){
+                String toWrite = "";
+                toWrite += log.getParticipant().getId() + delimter;
+                toWrite += log.getStartDate() + delimter;
+                toWrite += log.getEndDate() + delimter;
+                toWrite += log.getDuration() + delimter;
+                toWrite += log.getType() + delimter;
+                toWrite += log.getObjectId() + "\n";
+                writer.append(toWrite);
+            }
+            writer.flush();
+            writer.close();
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
 
-            writer.append("MKYONG");
-            writer.append(',');
-            writer.append("26");
-            writer.append('\n');
+    @Override
+    public void generateAnswerReport(Long questionnaireId) {
+        try
+        {
+            FileWriter writer = new FileWriter("backend/exports/questionnaire_"+questionnaireId+"_answerReport.csv");
 
-            writer.append("YOUR NAME");
-            writer.append(',');
-            writer.append("29");
-            writer.append('\n');
+            List<BigInteger> participantIds = logRepository.findByQuestionnaireDistinct(questionnaireId);
 
-            //generate whatever data you want
+            // get all questions per Questionnaire
+            List<Page> pages = pageRepository.findByQuestionnaire(new Questionnaire(questionnaireId));
+            List<Question> questions = new ArrayList<>();
+            for(Page p : pages){
+                questions.addAll(questionRepository.findByPage(p));
+            }
+
+            // CREATE HEADER
+            writer.append("Participant ID");
+            for(Question question : questions){
+                writer.append(delimter+question.getText());
+            }
+            writer.append("\n");
+
+            for(BigInteger id : participantIds){
+                Long idL = id.longValue();
+                writer.append(id+"");
+                for(Question question : questions){
+                    List<Answer> answers = answerRepository.findByParticipantAndQuestion(new Participant(idL), question);
+                    String entry = "";
+
+                    for(Answer answer : answers){
+                        if(entry.equals("")){
+                            entry += answer.getAnswer();
+                        }else{
+                            entry += ", "+answer.getAnswer();
+                        }
+                    }
+                    writer.append(delimter+entry);
+                }
+                writer.append("\n");
+            }
 
             writer.flush();
             writer.close();
-        } catch (IOException e) {
+        }
+        catch(IOException e)
+        {
             e.printStackTrace();
         }
     }

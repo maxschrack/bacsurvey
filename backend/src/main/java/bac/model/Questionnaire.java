@@ -61,6 +61,11 @@ public class Questionnaire extends bac.model.Entity{
         this.pages = new ArrayList<>();
     }
 
+    public Questionnaire(Long id){
+        this.id = id;
+        this.pages = new ArrayList<>();
+    }
+
     public Long getId() {
         return id;
     }

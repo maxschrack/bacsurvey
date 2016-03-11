@@ -17,6 +17,8 @@ public interface AnswerRepository extends JpaRepository<Answer, Long> {
 
     List<Answer> findByParticipant(Participant finder);
 
+    List<Answer> findByParticipantAndQuestion(Participant finder, Question question);
+
     @Query(value = "SELECT COUNT(*) from answer a WHERE a.answer LIKE('') AND a.question_id = ?1", nativeQuery = true)
     Integer countNonResponsesPerQuestion(Long questionId);
 

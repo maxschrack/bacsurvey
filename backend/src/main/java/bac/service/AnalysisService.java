@@ -19,4 +19,6 @@ public interface AnalysisService {
 
     void generateResponseReport(Long questionnaireId);
 
+    void generateAnswerReport(Long questionnaireId);
+
 }

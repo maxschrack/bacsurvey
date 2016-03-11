@@ -64,11 +64,22 @@ public class AnalysisCtrl {
 
 
     @RequestMapping(method = RequestMethod.GET, value = "/generateResponseReport/{id}")
-    @ApiOperation(value = "Retrieve Answer Analysis", notes = "")
+    @ApiOperation(value = "Retrieve Response Analysis", notes = "")
+
     public void generateResponseReport(@PathVariable Long id) throws ServiceException, HttpRequestMethodNotSupportedException {
         if (analysisService == null)
             throw new HttpRequestMethodNotSupportedException("GET");
 
         analysisService.generateResponseReport(id);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/generateAnswerReport/{id}")
+    @ApiOperation(value = "Retrieve Answer Analysis", notes = "")
+
+    public void generateAnswerReport(@PathVariable Long id) throws ServiceException, HttpRequestMethodNotSupportedException {
+        if (analysisService == null)
+            throw new HttpRequestMethodNotSupportedException("GET");
+
+        analysisService.generateAnswerReport(id);
     }
 }

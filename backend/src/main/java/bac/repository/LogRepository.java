@@ -2,15 +2,22 @@ package bac.repository;
 
 import bac.model.Log;
 import bac.model.Page;
+import bac.model.Questionnaire;
 import bac.model.enums.ELogType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @Repository
 public interface LogRepository extends JpaRepository<Log, Long> {
+
+    List<Log> findByQuestionnaire(Questionnaire questionnaire);
+
+    @Query(value = "SELECT DISTINCT(l.participant_id) FROM Log l WHERE l.questionnaire_id = ?1 ORDER BY l.participant_id", nativeQuery = true)
+    List<BigInteger> findByQuestionnaireDistinct(Long questionnaireId);
 
     List<Log> findByObjectIdAndType(Long id, ELogType type);
 

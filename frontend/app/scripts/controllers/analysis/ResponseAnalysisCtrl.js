@@ -111,5 +111,12 @@ angular.module('bacsurveyApp')
         labels: labels,
         barColors: ["#045FB4", "#FA5858"]
       });
-    }
+    };
+
+    vm.generateResponseReport = function(){
+      Analysis.generateResponseReport({'id': vm.questionnaireId}, function(){
+      }, function(error){
+        ErrorHandler.show(error);
+      });
+    };
   });

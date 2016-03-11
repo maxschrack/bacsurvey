@@ -49,6 +49,14 @@ public class Participant extends bac.model.Entity {
     @OneToMany(mappedBy = "participant")
     private Set<Log> log;
 
+    public Participant(){
+
+    }
+
+    public Participant(Long id){
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }

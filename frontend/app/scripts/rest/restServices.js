@@ -63,6 +63,8 @@ angular.module('bacsurveyApp')
   .factory('Analysis', function ($resource, BACSURVEY_API) {
     return $resource(BACSURVEY_API + 'analysis/:action/:id', {}, {
       getResponseAnalysis: {method: 'GET', params: {action: 'getResponseAnalysis', id: '@id'}},
-      getAnswerAnalysis: {method: 'GET', params: {action: 'getAnswerAnalysis', id: '@id'}}
+      getAnswerAnalysis: {method: 'GET', params: {action: 'getAnswerAnalysis', id: '@id'}},
+      generateResponseReport: {method: 'GET', params: {action: 'generateResponseReport', id: '@id'}},
+      generateAnswerReport: {method: 'GET', params: {action: 'generateAnswerReport', id: '@id'}}
     });
   });
