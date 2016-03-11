@@ -34,9 +34,17 @@ angular.module('bacsurveyApp')
     };
     vm.editQuestionnaire = function (questionnaire) {
       $state.go('editQuestionnaire', {'userId': vm.userId, 'questionnaireId': questionnaire.id});
-    }
+    };
 
     vm.runQuestionnaire = function (questionnaire){
       $state.go('runQuestionnaire', {'questionnaireId': questionnaire.id});
-    }
+    };
+
+    vm.showResponseAnalysis = function (questionnaire) {
+      $state.go('responseAnalysis', {'questionnaireId': questionnaire.id});
+    };
+
+    vm.showAnswerAnalysis = function (questionnaire) {
+      $state.go('answerAnalysis', {'questionnaireId': questionnaire.id});
+    };
   });

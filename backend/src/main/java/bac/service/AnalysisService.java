@@ -17,4 +17,6 @@ public interface AnalysisService {
 
     AnalyzeAnswerRest getAllAnswersPerQuestion(Long id) throws ServiceException;
 
+    void generateResponseReport(Long questionnaireId);
+
 }

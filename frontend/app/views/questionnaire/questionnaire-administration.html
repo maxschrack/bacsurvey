@@ -61,14 +61,18 @@
                       data-tooltip="Edit Questionnaire Data"
                       data-tooltip-position="top"><i
                 class="fa fa-edit"></i></button>
-              <button data-ng-click="vm.deleteQuestionnaire(questionnaire)" class="btn btn-default btn-sm"
-                      data-tooltip="Delete Page"
-                      data-tooltip-position="top">
-                <i class="fa fa-remove red"></i></button>
               <button data-ng-click="vm.runQuestionnaire(questionnaire)" class="btn btn-default btn-sm"
                       data-tooltip="Run Questionnaire"
                       data-tooltip-position="top">
                 <i class="fa fa-play green"></i></button>
+              <button data-ng-click="vm.showResponseAnalysis(questionnaire)" class="btn btn-default btn-sm"
+                      data-tooltip="Analysis Response"
+                      data-tooltip-position="top">
+                <i class="fa fa-bar-chart-o"></i></button>
+              <button data-ng-click="vm.showAnswerAnalysis(questionnaire)" class="btn btn-default btn-sm"
+                      data-tooltip="Analysis Answers"
+                      data-tooltip-position="top">
+                <i class="fa fa-inbox"></i></button>
             </td>
           </tr>
           </tbody>

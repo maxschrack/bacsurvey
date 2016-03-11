@@ -12,6 +12,8 @@ import bac.service.AnalysisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -141,5 +143,37 @@ public class AnalysisServiceImpl implements AnalysisService{
             return rest;
         }
         return null;
+    }
+
+    @Override
+    public void generateResponseReport(Long questionnaireId) {
+
+        FileWriter writer = null;
+
+        try {
+            writer = new FileWriter("test.csv");
+
+            writer.append("DisplayName");
+            writer.append(',');
+            writer.append("Age");
+            writer.append('\n');
+
+            writer.append("MKYONG");
+            writer.append(',');
+            writer.append("26");
+            writer.append('\n');
+
+            writer.append("YOUR NAME");
+            writer.append(',');
+            writer.append("29");
+            writer.append('\n');
+
+            //generate whatever data you want
+
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

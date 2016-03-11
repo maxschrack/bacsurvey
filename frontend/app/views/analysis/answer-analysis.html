@@ -37,7 +37,7 @@
               </uib-accordion>
             </div>
             <div data-ng-show="question.type == 'oq'">
-              <div class="well" ng-repeat="answer in question.oq_answers">
+              <div ng-repeat="answer in question.oq_answers track by $index">
                 {{answer}}
               </div>
             </div>

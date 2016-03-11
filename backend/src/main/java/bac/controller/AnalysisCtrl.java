@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.FileWriter;
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/analysis")
 @Api(value = "/analysis", description = "Analyze Questionnaire")
@@ -57,5 +60,15 @@ public class AnalysisCtrl {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<>(response, headers, HttpStatus.OK);
+    }
+
+
+    @RequestMapping(method = RequestMethod.GET, value = "/generateResponseReport/{id}")
+    @ApiOperation(value = "Retrieve Answer Analysis", notes = "")
+    public void generateResponseReport(@PathVariable Long id) throws ServiceException, HttpRequestMethodNotSupportedException {
+        if (analysisService == null)
+            throw new HttpRequestMethodNotSupportedException("GET");
+
+        analysisService.generateResponseReport(id);
     }
 }
