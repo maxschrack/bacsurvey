@@ -298,26 +298,21 @@ angular.module('bacsurveyApp')
     vm.logActivity = function(answer, changeType){
       if(vm.lastLoggedAnswer.questionId == answer.questionId){
         answer.duration = answer.duration + vm.dateDiff(vm.lastLoggedAnswer.log_end, vm.getDate());
-        answer.log_end = vm.getDate();
-        vm.lastLoggedAnswer = answer;
       }else{
         // first question of the page
         if(vm.lastLoggedAnswer.questionId == -1){
           answer.duration = vm.dateDiff(vm.timer, vm.getDate());
           answer.log_start = vm.timer;
-          answer.log_end = vm.getDate();
-          vm.lastLoggedAnswer = answer;
         }else if (answer.log_start == ''){
           answer.duration = vm.dateDiff(vm.lastLoggedAnswer.log_end, vm.getDate());
           answer.log_start = vm.lastLoggedAnswer.log_end;
-          answer.log_end = vm.getDate();
         }else{
           // participant has worked on the answer for the given question before
           answer.duration = answer.duration + vm.dateDiff(vm.lastLoggedAnswer.log_end, vm.getDate());
-          answer.log_end = vm.getDate();
-          vm.lastLoggedAnswer = answer;
+
         }
       }
+      answer.log_end = vm.getDate();
       vm.lastLoggedAnswer = answer;
     }
 

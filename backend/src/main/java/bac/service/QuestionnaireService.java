@@ -1,6 +1,7 @@
 package bac.service;
 
 import bac.dto.DtoList;
+import bac.dto.QuestionDto;
 import bac.dto.QuestionnaireDto;
 import bac.dto.UserDto;
 import bac.exception.ServiceException;
@@ -15,4 +16,6 @@ public interface QuestionnaireService {
     DtoList<QuestionnaireDto> readAll() throws ServiceException;
 
     DtoList<QuestionnaireDto> readAllPerUser(UserDto userDto);
+
+    DtoList<QuestionDto> readAllQuestions(QuestionnaireDto questionnaireDto);
 }

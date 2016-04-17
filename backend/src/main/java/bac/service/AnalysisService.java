@@ -5,6 +5,10 @@ import bac.dto.QuestionnaireDto;
 import bac.exception.ServiceException;
 import bac.rest.analysis.AnalyzeAnswerRest;
 import bac.rest.analysis.AnalyzeResponseRest;
+import bac.rest.analysis.ProcessModelRest;
+import bac.rest.analysis.ProcessRest;
+
+import java.util.List;
 
 public interface AnalysisService {
 
@@ -20,5 +24,7 @@ public interface AnalysisService {
     void generateResponseReport(Long questionnaireId);
 
     void generateAnswerReport(Long questionnaireId);
+
+    ProcessRest getProcessModel(Long questionnaireId);
 
 }

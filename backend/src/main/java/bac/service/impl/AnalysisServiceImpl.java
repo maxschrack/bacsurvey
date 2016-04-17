@@ -5,6 +5,7 @@ import bac.dto.QuestionnaireDto;
 import bac.exception.ServiceException;
 import bac.model.*;
 import bac.model.enums.ELogType;
+import bac.model.enums.EProcessModelQuestionType;
 import bac.model.enums.EQuestionType;
 import bac.repository.*;
 import bac.rest.analysis.*;
@@ -16,7 +17,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class AnalysisServiceImpl implements AnalysisService{
@@ -231,5 +234,89 @@ public class AnalysisServiceImpl implements AnalysisService{
         {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public ProcessRest getProcessModel(Long questionnaireId) {
+
+        Questionnaire questionnaire = new Questionnaire(questionnaireId);
+
+        // GET ALL PARTICIPANTS
+        List<Log> logList = logRepository.findByQuestionnaireAndType(questionnaire, ELogType.endpage);
+        List<Participant> participants = new ArrayList<>();
+        for(Log log : logList){
+            participants.add(log.getParticipant());
+        }
+
+        // GET ALL QUESTIONS PER PAGE PER QUESTIONNAIRE
+        List<Page> pages = pageRepository.findByQuestionnaire(questionnaire);
+        List<Question> questions = new ArrayList<>();
+        for(Page p : pages){
+            questions.addAll(questionRepository.findByPage(p));
+        }
+
+        List<ProcessModelRest> list = new ArrayList<>();
+
+        Map<String, Map<String, Integer>> mostFrequentlyQuestionFlow = new HashMap<>();
+
+        for(int i = 1; i<=questions.size(); i++){
+            Map<String, Integer> innerMap = new HashMap<>();
+            for(int j = 1; j<=questions.size(); j++){
+                innerMap.put("Q"+j, 0);
+            }
+
+            mostFrequentlyQuestionFlow.put("Q"+i, innerMap);
+        }
+
+        // GET LOGS PER PARTICIPANT
+        for(Participant participant : participants) {
+            ProcessModelRest pmr = new ProcessModelRest();
+            pmr.setParticipantId(participant.getId());
+
+
+            List<Log> logsOrderByStartDate = logRepository.findByQuestionnaireAndTypeAndParticipantOrderByStartDateAsc(questionnaire, ELogType.question, participant);
+            int questionIndex = 1;
+            int index = 0;
+            for (Question question : questions) {
+                Log test = logRepository.findByQuestionnaireAndTypeAndParticipantAndObjectId(questionnaire, ELogType.question, participant, question.getId());
+
+                ProcessModelQuestionRest pmqr = new ProcessModelQuestionRest();
+                if (test.getStartDate() != null) {
+                    if (question.getId() == logsOrderByStartDate.get(index).getObjectId()) {
+                        pmqr.setQuestionId(question.getId());
+                        pmqr.setLabel("Q" + questionIndex);
+                        pmqr.setStatus(EProcessModelQuestionType.correct);
+                    } else {
+                        // get Question ID and Question Number
+                        int i_temp = 1;
+                        for (Question q : questions) {
+                            if (q.getId() == logsOrderByStartDate.get(index).getObjectId()) {
+                                pmqr.setQuestionId(q.getId());
+                                pmqr.setLabel("Q" + i_temp);
+                            }
+                            i_temp++;
+                        }
+                        pmqr.setStatus(EProcessModelQuestionType.exchanged);
+                    }
+                    index++;
+                } else {
+                    // no answer for this question
+                    pmqr.setQuestionId(question.getId());
+                    pmqr.setLabel("Q" + questionIndex);
+                    pmqr.setStatus(EProcessModelQuestionType.skipped);
+                }
+                pmr.getQuestions().add(pmqr);
+                mostFrequentlyQuestionFlow.get("Q"+questionIndex).put(pmqr.getLabel(), mostFrequentlyQuestionFlow.get("Q"+questionIndex).get(pmqr.getLabel())+1);
+
+                questionIndex++;
+            }
+            list.add(pmr);
+        }
+
+        // Get most common question flow
+        ProcessRest response = new ProcessRest();
+        response.setProcessModel(list);
+        response.setMostFrequentlyProcess(mostFrequentlyQuestionFlow);
+        return response;
     }
 }

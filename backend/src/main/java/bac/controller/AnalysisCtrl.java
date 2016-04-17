@@ -5,6 +5,8 @@ import bac.dto.QuestionnaireDto;
 import bac.exception.ServiceException;
 import bac.rest.analysis.AnalyzeAnswerRest;
 import bac.rest.analysis.AnalyzeResponseRest;
+import bac.rest.analysis.ProcessModelRest;
+import bac.rest.analysis.ProcessRest;
 import bac.service.AnalysisService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/analysis")
@@ -81,5 +84,19 @@ public class AnalysisCtrl {
             throw new HttpRequestMethodNotSupportedException("GET");
 
         analysisService.generateAnswerReport(id);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/getProcessModel/{id}")
+    @ApiOperation(value = "Retrieve Process Model", notes = "")
+
+    public ResponseEntity<ProcessRest> getProcessModel(@PathVariable Long id) throws ServiceException, HttpRequestMethodNotSupportedException {
+        if (analysisService == null)
+            throw new HttpRequestMethodNotSupportedException("GET");
+
+        ProcessRest response = analysisService.getProcessModel(id);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return new ResponseEntity<>(response, headers, HttpStatus.OK);
     }
 }

@@ -1,6 +1,6 @@
 angular.module('bacsurveyApp')
 
-  .controller('ResponseAnalysisCtrl', function ($window, $http, $stateParams, $log, ErrorHandler, Questionnaire, MetaPage, Page, Question, Participant, Answer, Log, Analysis,  NotificationHandler, ngDialog) {
+  .controller('ResponseAnalysisCtrl', function ($window, $http, $stateParams, $log, ErrorHandler, Questionnaire, MetaPage, Page, Question, Participant, Answer, Log, Analysis, NotificationHandler, ngDialog) {
 
     var vm = this;
 

@@ -1,18 +1,25 @@
 package bac.service.impl;
 
+import bac.converter.QuestionConverter;
 import bac.converter.QuestionnaireConverter;
 import bac.dto.DtoList;
+import bac.dto.QuestionDto;
 import bac.dto.QuestionnaireDto;
 import bac.dto.UserDto;
 import bac.exception.ServiceException;
+import bac.model.Page;
+import bac.model.Question;
 import bac.model.Questionnaire;
 import bac.model.User;
+import bac.repository.PageRepository;
+import bac.repository.QuestionRepository;
 import bac.repository.QuestionnaireRepository;
 import bac.service.QuestionnaireService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -23,6 +30,12 @@ public class QuestionnaireServiceImpl implements QuestionnaireService{
     private QuestionnaireRepository questionnaireRepository;
     @Autowired
     private QuestionnaireConverter questionnaireConverter;
+    @Autowired
+    private PageRepository pageRepository;
+    @Autowired
+    private QuestionRepository questionRepository;
+    @Autowired
+    private QuestionConverter questionConverter;
 
     public QuestionnaireServiceImpl() {
     }
@@ -121,5 +134,17 @@ public class QuestionnaireServiceImpl implements QuestionnaireService{
         // convert and return
         return questionnaireConverter.toDtoList(result);
 
+    }
+
+    @Override
+    public DtoList<QuestionDto> readAllQuestions(QuestionnaireDto questionnaireDto) {
+        // get all questions per Questionnaire
+        List<Page> pages = pageRepository.findByQuestionnaire(new Questionnaire(questionnaireDto.getId()));
+        List<Question> questions = new ArrayList<>();
+        for(Page p : pages){
+            questions.addAll(questionRepository.findByPage(p));
+        }
+
+        return questionConverter.toDtoList(questions);
     }
 }

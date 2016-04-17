@@ -47,4 +47,8 @@ angular.module('bacsurveyApp')
     vm.showAnswerAnalysis = function (questionnaire) {
       $state.go('answerAnalysis', {'questionnaireId': questionnaire.id});
     };
+
+    vm.showProcessAnalysis = function (questionnaire) {
+      $state.go('processAnalysis', {'questionnaireId': questionnaire.id});
+    };
   });

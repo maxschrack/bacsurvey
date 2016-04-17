@@ -1,10 +1,9 @@
 package bac.controller;
 
-import bac.dto.DtoList;
-import bac.dto.QuestionnaireDto;
-import bac.dto.UserDto;
+import bac.dto.*;
 import bac.exception.ServiceException;
 import bac.repository.QuestionnaireRepository;
+import bac.rest.QuestionRest;
 import bac.rest.QuestionnaireRest;
 import bac.service.QuestionnaireService;
 import bac.util.DtoFactory;
@@ -113,6 +112,29 @@ public class QuestionnaireCtrl {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<>(questionnaires, headers, HttpStatus.OK);
+    }
+
+    // READ ALL PER USER
+    // READ
+    @RequestMapping(method = RequestMethod.GET, value="/getAllQuestions/{id}")
+    @ApiOperation(value = "Retrieve all Questions per Questionnaire", notes = "")
+    public ResponseEntity<List<QuestionRest>> readAllQuestions(@PathVariable Long id) throws ServiceException {
+
+        DtoList<QuestionDto> response = questionnaireService.readAllQuestions(new QuestionnaireDto(id));
+
+        List<QuestionRest> questions = new ArrayList<>();
+        for(QuestionDto dto : response){
+            if(dto instanceof OpenQuestionDto){
+                questions.add(ModelFactory.openQuestion((OpenQuestionDto) dto));
+            }else if(dto instanceof MultipleChoiceDto){
+                questions.add(ModelFactory.multipleChoice((MultipleChoiceDto) dto));
+            }
+        }
+
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return new ResponseEntity<>(questions, headers, HttpStatus.OK);
     }
 }
 

@@ -1,0 +1,74 @@
+<div class="row">
+  <div class="col-lg-12">
+    <h2 class="page-header">Analyze Process of <i>{{vm.questionnaire.name}}</i></h2>
+  </div>
+  <!-- /.col-lg-12 -->
+</div>
+<div class="row">
+  <div class="col-lg-8">
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <h4>Question Flow per Participant</h4>
+      </div>
+      <div class="panel-body">
+
+        <div class="form-group">
+          <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+              <td>Participant</td>
+              <td ng-repeat="question in vm.questions">A{{$index+1}}</td>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr ng-repeat="participant in vm.processAnalysis.processModel">
+              <td>Particiapnt {{$index + 1}}</td>
+              <td ng-repeat="question in participant.questions">
+                <span data-ng-show="question.status == 'skipped'" style="color:red;" >{{question.label}}</span>
+                <span data-ng-show="question.status == 'exchanged'" style="color:orange;" >{{question.label}}</span>
+                <span data-ng-show="question.status == 'correct'" style="color:green;" >{{question.label}}</span>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <h4>Questions per Answers</h4>
+      </div>
+      <div class="panel-body">
+
+        <div class="form-group">
+          <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+              <td>Answer</td>
+              <td ng-repeat="question in vm.questions">Q{{$index+1}}</td>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr ng-repeat="questions in vm.processAnalysis.mostFrequentlyProcess">
+              <td>A{{$index+1}}</td>
+              <td ng-repeat="question in questions">
+                <div style="background-color: #9FF781;" align="center">
+                  <span data-ng-show="$parent.$index == $index" style="color:green;" >{{question}}</span>
+                </div>
+                <div align="center">
+                  <span data-ng-show="!($parent.$index == $index) && question > 0" style="color:orange;" >{{question}}</span>
+                  <span data-ng-show="!($parent.$index == $index) && question == 0" style="color:green;" >{{question}}</span>
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

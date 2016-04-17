@@ -12,7 +12,8 @@ angular.module('bacsurveyApp')
       create: {method: 'POST', params: {}},
       update: {method: 'PUT', params: {}},
       getQuestionnaire: {method: 'GET', params: {action: 'get', id: '@id'}},
-      readAllPerUser: {method: 'GET', params: {action: 'getAllPerUser', id: '@id'}, isArray: true}
+      readAllPerUser: {method: 'GET', params: {action: 'getAllPerUser', id: '@id'}, isArray: true},
+      getAllQuestions: {method: 'GET', params: {action: 'getAllQuestions', id: '@id'}, isArray: true}
     });
   })
   .factory('MetaPage', function ($resource, BACSURVEY_API) {
@@ -65,6 +66,7 @@ angular.module('bacsurveyApp')
       getResponseAnalysis: {method: 'GET', params: {action: 'getResponseAnalysis', id: '@id'}},
       getAnswerAnalysis: {method: 'GET', params: {action: 'getAnswerAnalysis', id: '@id'}},
       generateResponseReport: {method: 'GET', params: {action: 'generateResponseReport', id: '@id'}},
-      generateAnswerReport: {method: 'GET', params: {action: 'generateAnswerReport', id: '@id'}}
+      generateAnswerReport: {method: 'GET', params: {action: 'generateAnswerReport', id: '@id'}},
+      getProcessModel: {method: 'GET', params: {action: 'getProcessModel', id: '@id'}}
     });
   });

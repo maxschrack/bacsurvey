@@ -2,6 +2,7 @@ package bac.repository;
 
 import bac.model.Log;
 import bac.model.Page;
+import bac.model.Participant;
 import bac.model.Questionnaire;
 import bac.model.enums.ELogType;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -32,4 +33,13 @@ public interface LogRepository extends JpaRepository<Log, Long> {
     @Query(value = "SELECT AVG(l.duration) " +
             "FROM Log l WHERE l.end_date IS NOT NULL AND l.object_id= ?1 AND l.type =?2 AND l.duration != 0", nativeQuery = true)
     Double getAvgTimePerObject(Long objectID, String type);
+
+    List<Log> findByQuestionnaireAndType(Questionnaire questionnaire, ELogType type);
+
+    List<Log> findByQuestionnaireAndTypeAndParticipantOrderByStartDateAsc(Questionnaire questionnaire, ELogType type, Participant participant);
+
+    List<Log> findByQuestionnaireAndTypeAndParticipantOrderByObjectIdAsc(Questionnaire questionnaire, ELogType type, Participant participant);
+
+    Log findByQuestionnaireAndTypeAndParticipantAndObjectId(Questionnaire questionnaire, ELogType type, Participant participant, Long objectID);
+
 }
