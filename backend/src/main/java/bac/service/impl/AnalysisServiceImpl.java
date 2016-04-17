@@ -16,10 +16,8 @@ import org.springframework.stereotype.Service;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.Map.Entry;
 
 @Service
 public class AnalysisServiceImpl implements AnalysisService{
@@ -241,11 +239,14 @@ public class AnalysisServiceImpl implements AnalysisService{
 
         Questionnaire questionnaire = new Questionnaire(questionnaireId);
 
+        int amountOfParticipants = 0;
+
         // GET ALL PARTICIPANTS
         List<Log> logList = logRepository.findByQuestionnaireAndType(questionnaire, ELogType.endpage);
         List<Participant> participants = new ArrayList<>();
         for(Log log : logList){
             participants.add(log.getParticipant());
+            amountOfParticipants++;
         }
 
         // GET ALL QUESTIONS PER PAGE PER QUESTIONNAIRE
@@ -257,7 +258,7 @@ public class AnalysisServiceImpl implements AnalysisService{
 
         List<ProcessModelRest> list = new ArrayList<>();
 
-        Map<String, Map<String, Integer>> mostFrequentlyQuestionFlow = new HashMap<>();
+        Map<String, Map<String, Integer>> mostFrequentlyQuestionFlow = new LinkedHashMap<>();
 
         for(int i = 1; i<=questions.size(); i++){
             Map<String, Integer> innerMap = new HashMap<>();
@@ -317,6 +318,86 @@ public class AnalysisServiceImpl implements AnalysisService{
         ProcessRest response = new ProcessRest();
         response.setProcessModel(list);
         response.setMostFrequentlyProcess(mostFrequentlyQuestionFlow);
+
+        response.setQuestionRelation(getQuestionRelation(questionnaireId, mostFrequentlyQuestionFlow, amountOfParticipants));
+
         return response;
+    }
+
+    public Map<String, Map<String, ColorRest>> getQuestionRelation(Long questionnaireId, Map<String, Map<String, Integer>> mfq, int amountOfParticipants){
+
+        Map<String, ColorRest> initializedMap = initializeQuestionMap(questionnaireId);
+
+        Map<String, Map<String, ColorRest>> questionRelation = new LinkedHashMap<>();
+
+
+        for(int i = 1; i<=mfq.size(); i++){
+            questionRelation.put("Q"+i, new HashMap<String, ColorRest>(initializedMap));
+        }
+
+        for(int i = 1; i<=mfq.size(); i++){
+            for(int j = 1; j<=mfq.size(); j++){
+                int a = mfq.get("Q"+i).get("Q"+j);
+
+                if(i != j){
+                    if(a == 0){
+                        if(i<j){
+                            questionRelation.get("Q"+i).put("Q" + j, new ColorRest("<<", "green"));             // green
+                        }else{
+                            questionRelation.get("Q"+i).put("Q" + j, new ColorRest(">>", "green"));             // green
+                        }
+                    }else{
+                        if(a == amountOfParticipants){
+                            if(i<j){
+                                questionRelation.get("Q"+i).put("Q" + j, new ColorRest(">>", "red"));         // red
+                            }else{
+                                questionRelation.get("Q"+i).put("Q" + j, new ColorRest("<<", "red"));         // red
+                            }
+                        }else{
+                            if(((double) a) == ((double) amountOfParticipants)/2){
+                                questionRelation.get("Q"+i).put("Q" + j, new ColorRest("=", "orange"));          // orange
+                            }else {
+                                if (a < mfq.get("Q"+i).get("Q"+i)) {
+                                    if(i<j){
+                                        questionRelation.get("Q" + i).put("Q" + j, new ColorRest("<", "orange"));// orange
+                                    }else{
+                                        questionRelation.get("Q" + i).put("Q" + j, new ColorRest(">", "orange"));// orange
+                                    }
+
+                                } else {
+                                    if(i<j){
+                                        questionRelation.get("Q" + i).put("Q" + j, new ColorRest(">", "red"));//red
+                                    }else{
+                                        questionRelation.get("Q" + i).put("Q" + j, new ColorRest("<", "red"));//red
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                }else{
+                    // Relationship of question to itself
+                    questionRelation.get("Q"+i).put("Q" + j, new ColorRest("#", "black"));
+                }
+            }
+        }
+
+        return questionRelation;
+    }
+
+    public Map<String, ColorRest> initializeQuestionMap(Long questionnaireId){
+        Map<String, ColorRest> map = new LinkedHashMap<>();
+
+        // get all questions per Questionnaire
+        List<Page> pages = pageRepository.findByQuestionnaire(new Questionnaire(questionnaireId));
+        List<Question> questions = new ArrayList<>();
+        for(Page p : pages){
+            questions.addAll(questionRepository.findByPage(p));
+        }
+
+        for(int i = 1; i <= questions.size(); i++){
+            map.put("Q"+i, new ColorRest());
+        }
+        return map;
     }
 }

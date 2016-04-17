@@ -14,6 +14,9 @@ public class ProcessRest {
     @JsonProperty("mostFrequentlyProcess")
     private Map<String, Map<String, Integer>> mostFrequentlyProcess;
 
+    @JsonProperty("questionRelation")
+    private Map<String, Map<String, ColorRest>> questionRelation;
+
     public List<ProcessModelRest> getProcessModel() {
         return processModel;
     }
@@ -28,6 +31,14 @@ public class ProcessRest {
 
     public void setMostFrequentlyProcess(Map<String, Map<String, Integer>> mostFrequentlyProcess) {
         this.mostFrequentlyProcess = mostFrequentlyProcess;
+    }
+
+    public Map<String, Map<String, ColorRest>> getQuestionRelation() {
+        return questionRelation;
+    }
+
+    public void setQuestionRelation(Map<String, Map<String, ColorRest>> questionRelation) {
+        this.questionRelation = questionRelation;
     }
 }
 
